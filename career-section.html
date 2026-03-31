@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Career — Experience Section</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #09090f;
+      --surface:   #0f0f1a;
+      --border:    #1e1e32;
+      --accent:    #00e5ff;
+      --accent2:   #7c3aed;
+      --accent3:   #22c55e;
+      --warn:      #f59e0b;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --card:      #111120;
+      --glow:      rgba(0,229,255,0.15);
+      --mono:      'Space Mono', monospace;
+      --display:   'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--display);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.6;
+    }
+
+    section#career {
+      position: relative;
+      padding: 100px 24px 120px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 28px; height: 1px;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 60px;
+    }
+    .section-title span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ── TIMELINE WRAPPER ── */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--accent), var(--accent2), transparent);
+    }
+
+    /* ── EXPERIENCE BLOCK ── */
+    .exp-block {
+      position: relative;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(28px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .exp-block:nth-child(1) { animation-delay: 0.1s; }
+    .exp-block:nth-child(2) { animation-delay: 0.25s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* dot on timeline */
+    .exp-block::before {
+      content: '';
+      position: absolute;
+      left: -46px; top: 18px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--bg), 0 0 12px var(--accent);
+    }
+
+    .exp-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .exp-meta { flex: 1; min-width: 220px; }
+
+    .exp-company {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .exp-role {
+      font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .exp-dates {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .exp-dates .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); }
+    .exp-dates.active .dot { animation: pulse 1.6s infinite; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+      50%       { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+    }
+
+    /* impact badge */
+    .impact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+    .badge-cyan  { color: var(--accent);  border-color: rgba(0,229,255,0.3);  background: rgba(0,229,255,0.06); }
+    .badge-green { color: var(--accent3); border-color: rgba(34,197,94,0.3);  background: rgba(34,197,94,0.06); }
+    .badge-purple{ color: #a78bfa;        border-color: rgba(124,58,237,0.3); background: rgba(124,58,237,0.06);}
+    .badge-amber { color: var(--warn);    border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06);}
+
+    /* ── PROJECT CARDS ── */
+    .projects-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .proj-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      cursor: default;
+    }
+    .proj-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-line, var(--accent)), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .proj-card:hover::before { opacity: 1; }
+    .proj-card:hover {
+      border-color: rgba(0,229,255,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,229,255,0.06);
+    }
+    .proj-card.green { --accent-line: var(--accent3); }
+    .proj-card.green:hover { border-color: rgba(34,197,94,0.2); }
+    .proj-card.purple { --accent-line: #a78bfa; }
+    .proj-card.purple:hover { border-color: rgba(124,58,237,0.2); }
+    .proj-card.amber { --accent-line: var(--warn); }
+    .proj-card.amber:hover { border-color: rgba(245,158,11,0.2); }
+
+    .proj-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .proj-title {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .proj-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: color 0.2s;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .proj-link:hover { color: var(--accent); border-color: rgba(0,229,255,0.3); }
+    .proj-link svg { width: 11px; height: 11px; }
+
+    .proj-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .proj-bullets li {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: #94a3b8;
+      padding-left: 18px;
+      position: relative;
+    }
+    .proj-bullets li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+    .proj-card.green  .proj-bullets li::before { color: var(--accent3); }
+    .proj-card.purple .proj-bullets li::before { color: #a78bfa; }
+    .proj-card.amber  .proj-bullets li::before { color: var(--warn); }
+
+    .highlight { color: var(--text); font-weight: 600; }
+
+    /* Tech stack chips */
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .tech {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    /* live apps row */
+    .live-apps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 18px 20px;
+      background: rgba(0,229,255,0.03);
+      border: 1px solid rgba(0,229,255,0.1);
+      border-radius: 8px;
+    }
+    .live-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+    .live-app {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .live-app:hover { color: #fff; }
+    .live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent3); box-shadow: 0 0 4px var(--accent3); animation: pulse 2s infinite; }
+
+    /* ── IN PROGRESS BANNER ── */
+    .in-progress {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--warn);
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      padding: 4px 10px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .blink { animation: blink 1.2s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    @media (max-width: 600px) {
+      .timeline { padding-left: 28px; }
+      .timeline::before { left: 0; }
+      .exp-block::before { left: -33px; }
+      section#career { padding: 60px 16px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<section id="career">
+
+  <!-- Header -->
+  <p class="section-label">Work Experience</p>
+  <h2 class="section-title">Where I've Made<br><span>Real Impact</span></h2>
+
+  <div class="timeline">
+
+    <!-- ═══════════════════════════════════════════
+         BLOCK 1 – Junior Cloud/DevOps Engineer
+    ════════════════════════════════════════════ -->
+    <div class="exp-block">
+      <div class="exp-header">
+        <div class="exp-meta">
+          <p class="exp-company">Yotta Techports</p>
+          <h3 class="exp-role">Junior Cloud &amp; DevOps Engineer</h3>
+          <span class="exp-dates">
+            <span class="dot"></span>Jun 2024 — Dec 2024 · 7 months
+          </span>
+        </div>
+        <div class="impact-row">
+          <span class="badge badge-cyan">AWS ECS</span>
+          <span class="badge badge-green">GitLab Self-Hosted</span>
+          <span class="badge badge-purple">CI/CD Pipelines</span>
+          <span class="badge badge-amber">Cost Automation</span>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- Card 1: GitLab on ECS -->
+        <div class="proj-card">
+          <div class="proj-top">
+            <p class="proj-title">🚀 End-to-End GitLab Self-Hosting on AWS ECS</p>
+            <a class="proj-link" href="https://git.yottatechports.com" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              git.yottatechports.com
+            </a>
+          </div>
+          <ul class="proj-bullets">
+            <li>Built a <span class="highlight">Proof of Concept</span> running GitLab's Docker image inside AWS ECS containers — validated feasibility before full infrastructure commitment.</li>
+            <li>Authored <span class="highlight">Dockerfile + buildspec.yml</span> that fetches the base image, builds it, pushes to ECR, and stores build artifacts as JSON — fully automated image lifecycle.</li>
+            <li>Created <span class="highlight">fetchsecrets.sh</span> to pull credentials from AWS Secrets Manager at runtime and patch GitLab's Rails config dynamically — zero hardcoded secrets in the codebase.</li>
+            <li>Developed a <span class="highlight">custom GitLab webhook handler</span> that fires on every new repository creation — automating post-init setup and eliminating manual steps per project.</li>
+            <li>Configured <span class="highlight">AWS CodePipeline</span> with source trigger → manual approval gate → CodeBuild (ECR push) → ECS deploy — production-grade release flow with zero-downtime deployments.</li>
+            <li>Provisioned the <span class="highlight">full AWS infrastructure</span> from scratch: ECS Cluster, Task Definition, Service, custom VPC, Subnets, Internet Gateway, Security Groups, EFS (persistent storage), RDS (PostgreSQL), CloudWatch dashboards, and EventBridge rules — single-handedly owning the entire platform stack.</li>
+            <li>Set up <span class="highlight">automated weekly AWS Backup</span> for EFS to protect all GitLab repository and config data — meeting recovery objectives with zero manual intervention.</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech">AWS ECS (Fargate)</span><span class="tech">ECR</span><span class="tech">CodePipeline</span>
+            <span class="tech">CodeBuild</span><span class="tech">EFS</span><span class="tech">RDS (PostgreSQL)</span>
+            <span class="tech">VPC</span><span class="tech">Secrets Manager</span><span class="tech">CloudWatch</span>
+            <span class="tech">EventBridge</span><span class="tech">AWS Backup</span><span class="tech">Docker</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Cost & Security Automation -->
+        <div class="proj-card amber">
+          <div class="proj-top">
+            <p class="proj-title">⚡ Cloud Security &amp; Cost Optimization — Lambda Automation Suite</p>
+          </div>
+          <ul class="proj-bullets">
+            <li>Engineered a <span class="highlight">Lambda function</span> that auto-detects and deletes Security Groups with overly permissive rules (0.0.0.0/0) — proactively eliminating attack surface before security audits flag them.</li>
+            <li>Built a <span class="highlight">tagging-enforcement Lambda</span> that automatically stops EC2 instances and RDS databases missing required cost-allocation tags — ensuring 100% resource accountability across the account.</li>
+            <li>Deployed a <span class="highlight">multi-account cost-saving Lambda</span> triggered daily: stops all EC2 instances tagged <code style="color:var(--warn);background:rgba(245,158,11,0.1);padding:1px 5px;border-radius:3px;font-size:11px;">stop=true</code> and publishes a cost-savings report via SNS email — driving measurable monthly AWS spend reduction across multiple AWS accounts.</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech">AWS Lambda</span><span class="tech">SNS</span><span class="tech">IAM</span>
+            <span class="tech">EC2</span><span class="tech">RDS</span><span class="tech">Multi-Account</span><span class="tech">EventBridge Scheduler</span>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /exp-block 1 -->
+
+
+    <!-- ═══════════════════════════════════════════
+         BLOCK 2 – Cloud & DevOps Engineer
+    ════════════════════════════════════════════ -->
+    <div class="exp-block">
+      <div class="exp-header">
+        <div class="exp-meta">
+          <p class="exp-company">Yotta Techports</p>
+          <h3 class="exp-role">Cloud &amp; DevOps Engineer</h3>
+          <span class="exp-dates active">
+            <span class="dot"></span>Dec 2024 — Present · 1 yr 4 months
+          </span>
+          &nbsp;
+          <span class="in-progress"><span class="blink">●</span> Currently Active</span>
+        </div>
+        <div class="impact-row">
+          <span class="badge badge-cyan">Platform Engineering</span>
+          <span class="badge badge-green">Terraform</span>
+          <span class="badge badge-purple">Kubernetes / EKS</span>
+          <span class="badge badge-amber">AWS Identity Center</span>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- Card 3: Platform Expansion -->
+        <div class="proj-card green">
+          <div class="proj-top">
+            <p class="proj-title">🏗️ Scaled Internal Dev Platform — 3 More Tools, Same Battle-Tested Infra</p>
+          </div>
+          <ul class="proj-bullets">
+            <li>Re-applied the ECS infrastructure blueprint to self-host <span class="highlight">SonarQube</span> (code quality) and <span class="highlight">OpenProject</span> (agile project management) — cut provisioning time significantly by reusing established IaC patterns.</li>
+            <li>Deployed <span class="highlight">FlexHR (Frappe/ERPNext)</span> on EC2 with full production configuration — giving the organisation an open-source HR platform without SaaS licensing costs.</li>
+            <li>Configured <span class="highlight">Route 53 DNS records</span> (CNAME + A records) for all four internal tools under the <code style="color:var(--accent3);font-size:11px;">yottatechports.com</code> domain — providing clean, branded access URLs for every team member.</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech">SonarQube</span><span class="tech">OpenProject</span><span class="tech">Frappe/ERPNext</span>
+            <span class="tech">AWS ECS</span><span class="tech">EC2</span><span class="tech">Route 53</span>
+          </div>
+        </div>
+
+        <!-- Card 4: AWS Governance -->
+        <div class="proj-card purple">
+          <div class="proj-top">
+            <p class="proj-title">🔐 AWS Governance — IAM, Secrets &amp; Cost Management</p>
+          </div>
+          <ul class="proj-bullets">
+            <li>Managed <span class="highlight">AWS IAM Identity Center</span> end-to-end: created roles, groups, and granular permission policies for multiple project teams — ensuring least-privilege access at scale.</li>
+            <li>Used <span class="highlight">Terraform</span> to update Lambda runtimes across accounts — replacing click-ops with repeatable, version-controlled infrastructure changes.</li>
+            <li>Centralised application credentials in <span class="highlight">AWS Secrets Manager</span> — eliminating environment-variable credential sprawl across services.</li>
+            <li>Produced <span class="highlight">monthly AWS billing reports</span> identifying services exceeding normal usage thresholds — giving leadership data-driven visibility into cloud cost anomalies.</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech">IAM Identity Center</span><span class="tech">Terraform</span>
+            <span class="tech">Secrets Manager</span><span class="tech">AWS Billing &amp; Cost Explorer</span>
+          </div>
+        </div>
+
+        <!-- Card 5: CI/CD & EKS -->
+        <div class="proj-card">
+          <div class="proj-top">
+            <p class="proj-title">⚙️ CI/CD &amp; Cloud-Native Delivery — GitHub Actions + EKS</p>
+            <span class="in-progress"><span class="blink">●</span> In Progress</span>
+          </div>
+          <ul class="proj-bullets">
+            <li>Built and deployed a <span class="highlight">personal portfolio website</span> using GitHub Actions with automatic deployment to GitHub Pages on every push — treating personal projects with production-grade delivery standards.</li>
+            <li>Currently architecting a <span class="highlight">microservices deployment pipeline</span> to AWS EKS via GitHub Actions — establishing Kubernetes-native delivery for containerised workloads.</li>
+            <li>Integrating <span class="highlight">Prometheus + Grafana</span> observability stack into the EKS cluster — enabling real-time metrics, alerting, and dashboards for all running services.</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech">GitHub Actions</span><span class="tech">AWS EKS</span><span class="tech">Kubernetes</span>
+            <span class="tech">Prometheus</span><span class="tech">Grafana</span><span class="tech">Helm</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Apps -->
+      <div class="live-apps">
+        <p class="live-label">🌐 Live Production Applications I Deployed &amp; Own</p>
+        <a class="live-app" href="https://git.yottatechports.com" target="_blank">
+          <span class="live-dot"></span>GitLab SCM
+        </a>
+        <span style="color:#1e1e32">·</span>
+        <a class="live-app" href="https://sonar.yottatechports.com" target="_blank">
+          <span class="live-dot"></span>SonarQube
+        </a>
+        <span style="color:#1e1e32">·</span>
+        <a class="live-app" href="https://agile.yottatechorts.com" target="_blank">
+          <span class="live-dot"></span>OpenProject
+        </a>
+        <span style="color:#1e1e32">·</span>
+        <a class="live-app" href="https://flexhr.yottatechports.com" target="_blank">
+          <span class="live-dot"></span>FlexHR (Frappe)
+        </a>
+      </div>
+
+    </div><!-- /exp-block 2 -->
+
+  </div><!-- /timeline -->
+</section>
+
+</body>
+</html>

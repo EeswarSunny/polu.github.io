@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Experience — DevOps Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080c10;
+      --bg2: #0d1117;
+      --bg3: #111820;
+      --border: #1e2d3d;
+      --border2: #243447;
+      --accent: #00d4ff;
+      --accent2: #00ff88;
+      --accent3: #ff6b35;
+      --text: #e2e8f0;
+      --text2: #8b9ab0;
+      --text3: #4a5a6e;
+      --card: #0d1520;
+      --glow: rgba(0, 212, 255, 0.12);
+      --glow2: rgba(0, 255, 136, 0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND GRID ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::before {
+      content: '//';
+      opacity: 0.5;
+    }
+
+    .section-title {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .section-title span {
+      color: var(--accent);
+    }
+
+    .section-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 72px;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+    .section-sub em {
+      color: var(--accent2);
+      font-style: normal;
+    }
+
+    /* ── TIMELINE WRAPPER ── */
+    .timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border2) 10%, var(--border2) 90%, transparent);
+    }
+
+    /* ── ROLE CARD ── */
+    .role-card {
+      position: relative;
+      padding: 0 0 64px 48px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .role-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Timeline dot */
+    .role-card::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 28px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--bg), 0 0 16px var(--accent);
+      transition: box-shadow 0.3s;
+    }
+    .role-card:hover::before {
+      box-shadow: 0 0 0 3px var(--bg), 0 0 28px var(--accent), 0 0 48px var(--glow);
+    }
+
+    /* ── ROLE HEADER ── */
+    .role-header {
+      margin-bottom: 28px;
+    }
+
+    .role-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .role-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .role-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .badge-current {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      color: var(--accent2);
+    }
+    .badge-past {
+      background: rgba(255, 107, 53, 0.08);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      color: var(--accent3);
+    }
+
+    .role-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .role-company {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .role-company span {
+      color: var(--accent2);
+    }
+
+    /* ── IMPACT BAR ── */
+    .impact-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .impact-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 7px 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .impact-chip:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--glow);
+    }
+    .impact-chip .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .impact-chip .lbl {
+      font-size: 11px;
+      color: var(--text2);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── CATEGORY BLOCKS ── */
+    .categories {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cat-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .cat-block:hover {
+      border-color: var(--border2);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+    }
+
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .cat-icon {
+      font-size: 16px;
+      width: 28px;
+      text-align: center;
+    }
+    .cat-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text2);
+      flex: 1;
+    }
+    .cat-toggle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      color: var(--text3);
+      transition: transform 0.3s;
+    }
+    .cat-block.open .cat-toggle {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+
+    .cat-body {
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+    }
+    .cat-block.open .cat-body {
+      max-height: 1000px;
+      padding: 16px 20px 20px;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bullet-list li {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text2);
+      padding-left: 20px;
+      position: relative;
+    }
+    .bullet-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 11px;
+      top: 3px;
+    }
+    .bullet-list li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .bullet-list li .highlight {
+      color: var(--accent2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(0,255,136,0.07);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .bullet-list li .num {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* ── TECH TAGS ── */
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 28px;
+    }
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--text3);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tech-tag:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── IN PROGRESS BADGE ── */
+    .wip-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 32px;
+      padding: 12px 16px;
+      background: rgba(0, 255, 136, 0.04);
+      border: 1px dashed rgba(0, 255, 136, 0.25);
+      border-radius: 8px;
+    }
+    .wip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,255,136,0); }
+    }
+    .wip-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent2);
+    }
+
+    /* ── DIVIDER ── */
+    .role-divider {
+      height: 1px;
+      background: linear-gradient(to right, var(--border2), transparent);
+      margin: 0 0 0 0;
+      position: absolute;
+      left: 48px;
+      right: 0;
+      bottom: 32px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .container { padding: 60px 20px; }
+      .role-card { padding-left: 28px; }
+      .impact-strip { gap: 8px; }
+      .impact-chip .num { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+<section id="experience">
+  <div class="container">
+
+    <p class="section-label">Career Timeline</p>
+    <h2 class="section-title">Where I've <span>Shipped</span> Real Impact</h2>
+    <p class="section-sub">
+      <em>2 years. 5 live production systems. 3 dev teams. Zero dedicated infra team.</em><br>
+      Every number here is something I built, broke, fixed, and automated myself.
+    </p>
+
+    <div class="timeline">
+
+      <!-- ══════════════════════════════════════════
+           ROLE 1 — DEVOPS ENGINEER (Current)
+      ══════════════════════════════════════════ -->
+      <div class="role-card" id="card1">
+        <div class="role-header">
+          <div class="role-meta">
+            <span class="role-period">DEC 2024 — PRESENT</span>
+            <span class="role-badge badge-current">● Current</span>
+          </div>
+          <div class="role-title">DevOps Engineer</div>
+          <div class="role-company">Yotta Tech Ports &nbsp;·&nbsp; <span>Hyderabad, IN</span></div>
+        </div>
+
+        <!-- Impact Chips -->
+        <div class="impact-strip">
+          <div class="impact-chip"><span class="num">5</span><span class="lbl">Live Production Apps</span></div>
+          <div class="impact-chip"><span class="num">3</span><span class="lbl">Dev Teams Supported</span></div>
+          <div class="impact-chip"><span class="num">20+</span><span class="lbl">Engineers on AWS</span></div>
+          <div class="impact-chip"><span class="num">&lt;20min</span><span class="lbl">Avg MTTR</span></div>
+          <div class="impact-chip"><span class="num">~60%</span><span class="lbl">SaaS Cost Saved</span></div>
+          <div class="impact-chip"><span class="num">~40%</span><span class="lbl">Compute Cost Cut</span></div>
+        </div>
+
+        <!-- Category Blocks -->
+        <div class="categories">
+
+          <div class="cat-block open">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">🏗️</span>
+              <span class="cat-title">Infrastructure Ownership</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Sole DevOps owner for <strong>5 live production applications</strong> — GitLab, SonarQube, OpenProject, FlexHR, and a custom internal tool — hosted on AWS ECS and EC2, supporting <span class="highlight">3 teams · 20+ engineers</span> with no dedicated infra team</li>
+                <li>Provisioned and maintained full AWS stack per application: <strong>VPC, subnets, EFS, RDS, ALB, security groups</strong> — eliminating external vendor dependency and cutting estimated SaaS licensing costs by <span class="num">~60% annually</span></li>
+                <li>Managed <strong>5 custom subdomain configurations</strong> on Route 53 (CNAME and A records) across all production apps with zero unplanned DNS downtime during any live change</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cat-block open">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">🚨</span>
+              <span class="cat-title">Incident Response & Reliability</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Maintained <strong>MTTR under 20 minutes</strong> across all production incidents, with an average initial response time of <span class="num">&lt;5 minutes</span> from alert to active triage — across HTTP 500/502 failures on apps used daily by 20+ engineers</li>
+                <li>Authored <strong>RCA playbooks for every major incident</strong>, reducing repeat resolution time by an estimated <span class="num">~70%</span> for similar failure patterns across all 5 hosted applications</li>
+                <li>Built a <strong>CloudWatch + SNS alerting system</strong> with custom dashboards covering 10+ metrics per application — enabling proactive detection before engineers ever report an issue</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cat-block open">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">💰</span>
+              <span class="cat-title">Cost Optimization & FinOps</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Built a <strong>multi-account Lambda automation</strong> enforcing <code style="color:var(--accent);font-size:12px">stop=true</code> tagging to shut down idle EC2 instances daily — reducing idle compute spend by <span class="num">~40%/month</span> across 3 AWS accounts with automated SNS notifications</li>
+                <li>Conduct <strong>monthly AWS billing reviews</strong> across 3+ accounts, producing per-service cost reports that flag abnormal spend spikes before they compound into unplanned overruns</li>
+                <li>Automated EC2 and RDS shutdown for <strong>untagged resources</strong> via Lambda — enforcing compliance and eliminating costs from orphaned infrastructure with zero manual effort</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cat-block">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">🔐</span>
+              <span class="cat-title">Security & Governance</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Built a <strong>Lambda auto-remediation function</strong> that detects and removes overly permissive security groups (0.0.0.0/0) — reducing manual security audit effort by <span class="num">~90%</span> and cutting exposure window from days to near-zero</li>
+                <li>Managed <strong>AWS IAM Identity Center</strong> for 3+ project teams — created roles, groups, and least-privilege policies for every new project onboard, ensuring zero over-permissioned access in production</li>
+                <li>Secured all application secrets across <strong>5 applications in AWS Secrets Manager</strong>, eliminating 100% of hardcoded credentials from every codebase</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cat-block">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">⚙️</span>
+              <span class="cat-title">Automation & IaC</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Used <strong>Terraform</strong> to manage Lambda runtime upgrades across multiple functions — reducing manual update effort by <span class="num">~75%</span> per release cycle and maintaining IaC consistency across environments</li>
+                <li>Reduced AWS access provisioning turnaround from days to <span class="num">&lt;30 minutes</span> per engineer by standardizing IAM user creation workflows for new project onboardings</li>
+                <li>Hosted <strong>Frappe/FlexHR</strong> on EC2 as a fully configured HR tool for internal teams, handling end-to-end setup and domain routing independently</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- WIP Line -->
+        <div class="wip-line">
+          <div class="wip-dot"></div>
+          <span class="wip-text">In Progress — Deploying microservices on AWS EKS via GitHub Actions · Integrating Prometheus + Grafana for full observability across 5+ services</span>
+        </div>
+
+        <div class="tech-tags">
+          <span class="tech-tag">AWS ECS</span><span class="tech-tag">AWS EKS</span><span class="tech-tag">Docker</span>
+          <span class="tech-tag">ECR</span><span class="tech-tag">CodePipeline</span><span class="tech-tag">Lambda</span>
+          <span class="tech-tag">Terraform</span><span class="tech-tag">CloudWatch</span><span class="tech-tag">SNS</span>
+          <span class="tech-tag">Route 53</span><span class="tech-tag">IAM Identity Center</span><span class="tech-tag">Secrets Manager</span>
+          <span class="tech-tag">GitHub Actions</span><span class="tech-tag">Prometheus</span><span class="tech-tag">Grafana</span>
+        </div>
+
+        <div class="role-divider"></div>
+      </div>
+
+
+      <!-- ══════════════════════════════════════════
+           ROLE 2 — JUNIOR DEVOPS ENGINEER
+      ══════════════════════════════════════════ -->
+      <div class="role-card" id="card2">
+        <div class="role-header">
+          <div class="role-meta">
+            <span class="role-period">JUN 2024 — DEC 2024</span>
+            <span class="role-badge badge-past">Foundation</span>
+          </div>
+          <div class="role-title">Junior DevOps Engineer</div>
+          <div class="role-company">Yotta Tech Ports &nbsp;·&nbsp; <span>Hyderabad, IN</span></div>
+        </div>
+
+        <!-- Impact Chips -->
+        <div class="impact-strip">
+          <div class="impact-chip"><span class="num">~80%</span><span class="lbl">Deployment Time Saved</span></div>
+          <div class="impact-chip"><span class="num">$3–5K</span><span class="lbl">Annual License Savings</span></div>
+          <div class="impact-chip"><span class="num">4 wks</span><span class="lbl">Solo Full-Stack Build</span></div>
+          <div class="impact-chip"><span class="num">RPO 7d</span><span class="lbl">Backup Established</span></div>
+          <div class="impact-chip"><span class="num">100%</span><span class="lbl">Secrets Removed</span></div>
+        </div>
+
+        <div class="categories">
+
+          <div class="cat-block open">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">🚀</span>
+              <span class="cat-title">GitLab Self-Hosting — Built From Zero</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Designed and delivered a <strong>production-grade self-managed GitLab</strong> on AWS ECS using Docker — from a proof of concept to a live environment serving <span class="highlight">20+ developers · 3 teams</span>, saving an estimated <span class="num">~$3,000–$5,000/year</span> in SaaS licensing costs</li>
+                <li>Engineered a full <strong>AWS CodePipeline</strong> (source trigger → manual approval → build → ECS deploy) that reduced deployment effort from multi-step manual process to a <span class="num">single approval click</span> — cutting deployment time by <span class="num">~80%</span></li>
+                <li>Provisioned complete AWS infrastructure from scratch in <span class="num">under 4 weeks</span> as a first-time solo build: <strong>ECS cluster, task definition, ECS service, VPC, subnets, internet gateway, security groups, EFS, RDS, and ALB</strong> — with SSH and HTTPS fully working</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cat-block open">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">🔧</span>
+              <span class="cat-title">CI/CD Automation & Custom Scripts</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Built a custom <strong>Dockerfile and buildspec.yml</strong> automating image build, ECR push, and artifact storage in JSON — reducing build configuration effort by <span class="num">~65%</span> compared to manual image management</li>
+                <li>Wrote a <strong><code style="color:var(--accent);font-size:12px">fetchsecrets.sh</code> script</strong> that dynamically injects AWS Secrets Manager credentials into GitLab's Rails config at container startup — removing <span class="num">100%</span> of hardcoded secrets from the deployment pipeline</li>
+                <li>Developed a <strong>custom webhook config file</strong> that fires automatically on every new repository creation — saving developers <span class="num">5–10 minutes</span> of manual webhook setup per project</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cat-block">
+            <div class="cat-header" onclick="toggle(this)">
+              <span class="cat-icon">🛡️</span>
+              <span class="cat-title">Observability, Backup & Recovery</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul class="bullet-list">
+                <li>Configured <strong>weekly AWS Backup on EFS</strong> protecting all GitLab repository data — establishing an RPO of <span class="num">7 days</span> with zero manual backup effort required</li>
+                <li>Built a <strong>CloudWatch + EventBridge metrics dashboard</strong> with alerts across <span class="num">10+ infrastructure metrics</span>, providing real-time visibility into GitLab container health, RDS performance, and ECS service state</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tech-tags">
+          <span class="tech-tag">AWS ECS</span><span class="tech-tag">Docker</span><span class="tech-tag">ECR</span>
+          <span class="tech-tag">CodePipeline</span><span class="tech-tag">EFS</span><span class="tech-tag">RDS</span>
+          <span class="tech-tag">ALB</span><span class="tech-tag">VPC</span><span class="tech-tag">CloudWatch</span>
+          <span class="tech-tag">EventBridge</span><span class="tech-tag">AWS Backup</span><span class="tech-tag">Secrets Manager</span>
+          <span class="tech-tag">GitLab Self-Hosted</span><span class="tech-tag">Bash</span><span class="tech-tag">buildspec.yml</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggle(header) {
+    const block = header.closest('.cat-block');
+    block.classList.toggle('open');
+  }
+
+  // Intersection Observer for scroll-in animation
+  const cards = document.querySelectorAll('.role-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 150);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(card => observer.observe(card));
+</script>
+</body>
+</html>

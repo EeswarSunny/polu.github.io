@@ -1,0 +1,751 @@
+<html class="dark" lang="en"><head></head><body class="bg-surface text-on-surface selection:bg-primary/30">```html
+
+
+
+    <meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevOps Architect | Nandeeswar Reddy Polu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;family=JetBrains+Mono:wght@300;400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#feb300",
+              "secondary-container": "#3c494f",
+              "on-tertiary": "#5e4000",
+              "inverse-primary": "#b12f00",
+              "surface": "#0e0e0e",
+              "surface-bright": "#2c2c2c",
+              "on-background": "#ffffff",
+              "tertiary-dim": "#eda600",
+              "on-secondary-fixed": "#354147",
+              "surface-dim": "#0e0e0e",
+              "on-tertiary-fixed": "#382400",
+              "tertiary-fixed-dim": "#eda600",
+              "primary": "#ff8f6f",
+              "on-surface": "#ffffff",
+              "surface-container-highest": "#262626",
+              "primary-fixed-dim": "#ff5d2c",
+              "outline-variant": "#484847",
+              "on-primary": "#5c1400",
+              "tertiary-container": "#feb300",
+              "tertiary": "#ffc563",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-fixed-variant": "#5e4000",
+              "background": "#0e0e0e",
+              "secondary-dim": "#c9d6de",
+              "on-secondary-fixed-variant": "#515d64",
+              "primary-dim": "#ff734a",
+              "secondary": "#d7e4ec",
+              "surface-container-high": "#20201f",
+              "on-tertiary-container": "#523700",
+              "primary-fixed": "#ff7851",
+              "error-container": "#9f0519",
+              "on-secondary-container": "#c5d2da",
+              "error": "#ff716c",
+              "surface-variant": "#262626",
+              "error-dim": "#d7383b",
+              "outline": "#767575",
+              "on-error": "#490006",
+              "secondary-fixed-dim": "#c9d6de",
+              "primary-container": "#ff7851",
+              "on-surface-variant": "#adaaaa",
+              "on-primary-fixed-variant": "#581300",
+              "inverse-surface": "#fcf9f8",
+              "on-primary-container": "#470d00",
+              "surface-tint": "#ff8f6f",
+              "surface-container": "#1a1a1a",
+              "surface-container-low": "#131313",
+              "on-error-container": "#ffa8a3",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed": "#d7e4ec",
+              "inverse-on-surface": "#565555",
+              "on-secondary": "#47545a"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .bento-card {
+            background: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+        .bento-card:hover {
+            background: #262626;
+            transform: translateY(-4px);
+        }
+
+        /* Experience Section Custom Styles */
+        .timeline {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #484847 10%, #484847 90%, transparent);
+        }
+        .role-card {
+            position: relative;
+            padding: 0 0 64px 48px;
+        }
+        .role-card::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 28px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #ff8f6f;
+            box-shadow: 0 0 0 3px #0e0e0e, 0 0 16px #ff8f6f;
+        }
+        .cat-block {
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .cat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid #262626;
+            cursor: pointer;
+        }
+        .cat-body {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s;
+        }
+        .cat-block.open .cat-body {
+            max-height: 1000px;
+            padding: 16px 20px 20px;
+        }
+        .cat-block.open .cat-toggle {
+            transform: rotate(45deg);
+            color: #ff8f6f;
+        }
+        .wip-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 32px;
+            padding: 12px 16px;
+            background: rgba(0, 188, 212, 0.04);
+            border: 1px dashed rgba(0, 188, 212, 0.25);
+            border-radius: 8px;
+        }
+        .wip-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00bcd4;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,188,212,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,188,212,0); }
+        }
+    </style>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/60 dark:bg-[#0e0e0e]/60 backdrop-blur-md shadow-[0_8px_32px_0_rgba(255,143,111,0.08)]">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
+<span class="text-xl font-extrabold text-[#ff8f6f] tracking-tighter font-['Plus_Jakarta_Sans']">
+<div class="flex flex-col">
+<span class="text-xl font-bold font-headline text-[#ff8f6f] leading-none">Nandeeswar Reddy Polu</span>
+<span class="font-label font-bold text-[#00bcd4] tracking-[0.1em] mt-1 text-[14px]">DEVOPS · CLOUD ENGINEER</span>
+</div>
+</span>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant dark:text-[#adaaaa] hover:text-[#ff8f6f] transition-colors font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#Skills">Skills</a>
+<a class="text-on-surface-variant dark:text-[#adaaaa] hover:text-[#ff8f6f] transition-colors font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#Experience">Experience</a>
+<a class="text-on-surface-variant dark:text-[#adaaaa] hover:text-[#ff8f6f] transition-colors font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#Projects">Projects</a>
+<a class="text-on-surface-variant dark:text-[#adaaaa] hover:text-[#ff8f6f] transition-colors font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#Blog">Blog</a>
+<a class="text-on-surface-variant dark:text-[#adaaaa] hover:text-[#ff8f6f] transition-colors font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#Contact">Contact</a>
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:border-primary transition-all duration-300" id="theme-toggle">
+<span class="material-symbols-outlined dark:hidden">light_mode</span>
+<span class="material-symbols-outlined hidden dark:block text-primary">light_mode</span>
+</button>
+<button class="flex items-center gap-2 border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:border-primary px-4 py-2 rounded-md font-label font-bold transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-sm">download</span> Resume
+            </button>
+<button class="bg-primary text-on-primary-fixed px-6 py-2 rounded-md font-label font-bold hover:opacity-80 transition-all duration-300 active:scale-95">Hire Me →</button>
+</div>
+<div class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="min-h-[700px] flex flex-col justify-center px-8 max-w-7xl mx-auto pt-16" id="Hero">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center mb-24">
+<!-- Left Side -->
+<div class="lg:col-span-7 space-y-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-label uppercase tracking-widest text-on-surface-variant">Available for High-Impact Roles</span>
+</div>
+<h1 class="text-5xl lg:text-7xl font-headline font-extrabold leading-tight tracking-tight">
+                    Results-Driven <br/>
+<span class="text-primary italic">Cloud Problem Solver</span>
+</h1>
+<p class="text-xl text-on-surface-variant font-body max-w-xl leading-relaxed">
+                    Specializing in container orchestration (AWS ECS, EKS) and GitOps-driven deployment pipelines using Terraform.
+                </p>
+<div class="flex flex-wrap gap-4 mt-8 items-center">
+<a class="bg-primary text-on-primary-fixed px-8 py-3 rounded-md font-label font-bold flex items-center gap-2 hover:bg-primary-dim transition-all duration-300 shadow-lg shadow-primary/20" href="#Contact">
+                        Contact Me
+                        <span class="material-symbols-outlined text-lg">mail</span>
+</a>
+<a class="border border-primary/30 text-primary px-8 py-3 rounded-md font-label font-bold flex items-center gap-2 hover:bg-primary/5 transition-all duration-300" href="#Experience">Experience
+                        <span class="material-symbols-outlined text-lg">work_history</span>
+</a>
+</div>
+<!-- Challenge/Solution Box -->
+<div class="relative group mt-12">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-primary to-tertiary rounded-xl blur opacity-10 group-hover:opacity-25 transition duration-1000"></div>
+<div class="relative bg-surface-container-low p-6 rounded-xl border border-outline-variant/15 flex items-center gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+<div>
+<p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest mb-1">Before Optimization</p>
+<p class="text-lg font-headline font-bold text-gray-500 line-through">2hr Deployment Cycle</p>
+</div>
+<div class="text-primary hidden md:block">
+<span class="material-symbols-outlined">trending_flat</span>
+</div>
+<div>
+<p class="text-[10px] font-label text-primary uppercase tracking-widest mb-1">GitOps Success</p>
+<p class="text-xl font-headline font-bold text-white">12min Automated Pipeline</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side -->
+<div class="lg:col-span-5 relative">
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden shadow-2xl group">
+<img alt="Nandeeswar Reddy Polu" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMj3F70sFeKw98z4nAQLzCeGGnX6C7ZFuQ78u8lZElc9R9JkF_iYvUGQA8jp80k17AO2qvAfcJzpS5Id6VcFQzlA4ZNDoBWbExampqunC3GaXe3kV62ekIuPEdCuaaNKsW3iSHW91qhOO4_rRTGg_-2u8yEhvoQa_Jnb6GJ-8Yl4zOB8Ed7t3HAQ8xKJc3yLuvshMnTgOx-iYWe8s1XwlTKAXwbLc0BAutlOJxtu3R2T1MaDBU_Osk8aJy-6hUiW8TjeXOsPwuy4g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6 bg-surface-container-high/80 backdrop-blur-md p-4 rounded-lg border border-outline-variant/15">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface">System Health: Optimal</span>
+</div>
+</div>
+</div>
+<div class="absolute -left-6 top-1/4 bottom-1/4 w-[1px] bg-gradient-to-b from-surface-variant to-primary hidden lg:block"></div>
+<div class="absolute -right-8 -bottom-8 w-48 h-48 border border-outline-variant/10 rounded-full flex items-center justify-center -z-10">
+<div class="w-32 h-32 border border-outline-variant/10 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Metrics Row -->
+<div class="mb-20 flex flex-wrap gap-12 border-t border-outline-variant/10 pt-12">
+<div class="flex flex-col gap-1">
+<div class="font-headline font-bold text-3xl text-tertiary">2+</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Years Obsessed</div>
+</div>
+<div class="w-[1px] h-12 bg-outline-variant/20 hidden md:block"></div>
+<div class="flex flex-col gap-1">
+<div class="font-headline font-bold text-3xl text-tertiary">99.9%</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Uptime Mindset</div>
+</div>
+<div class="w-[1px] h-12 bg-outline-variant/20 hidden md:block"></div>
+<div class="flex flex-col gap-1">
+<div class="font-headline font-bold text-3xl text-tertiary">AWS</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Certified Expert</div>
+</div>
+</div>
+</section>
+<!-- Technical Proficiency Matrix -->
+<section class="py-32 bg-surface-container-low px-8" id="Skills">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+<div class="max-w-2xl">
+<h2 class="font-headline text-4xl font-bold tracking-tight mb-4 text-on-surface">Technical Proficiency Matrix</h2>
+<p class="text-on-surface-variant leading-relaxed">A high-density audit of my engineering ecosystem, categorized by domain, specialized sub-groupings, and documented years of production-grade experience.</p>
+</div>
+<div class="flex gap-2">
+<span class="px-4 py-2 bg-surface-container-high rounded-sm font-label text-[10px] uppercase tracking-tighter text-on-surface-variant border border-outline-variant/20">Updated Q4 2024</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant/15">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high">
+<th class="px-8 py-5 font-label text-xs uppercase tracking-widest text-primary border-b border-outline-variant/30">Domain Category</th>
+<th class="px-8 py-5 font-label text-xs uppercase tracking-widest text-primary border-b border-outline-variant/30">Sub-grouping</th>
+<th class="px-8 py-5 font-label text-xs uppercase tracking-widest text-primary border-b border-outline-variant/30">Core Skillset</th>
+<th class="px-8 py-5 font-label text-xs uppercase tracking-widest text-primary border-b border-outline-variant/30 text-right">Years of Exp</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: Cloud Infrastructure -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Cloud Platform</td>
+<td class="px-8 py-6 text-on-surface-variant italic font-body text-sm">AWS Ecosystem</td>
+<td class="px-8 py-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">EC2/EKS</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Lambda</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">IAM/VPC</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">RDS/Aurora</span>
+</div>
+</td>
+<td class="px-8 py-6 font-label text-right text-tertiary font-bold tracking-widest">8+</td>
+</tr>
+<!-- Row 2: Infrastructure as Code -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6 font-headline font-bold text-on-surface">IaC &amp; Automation</td>
+<td class="px-8 py-6 text-on-surface-variant italic font-body text-sm">Provisioning</td>
+<td class="px-8 py-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Terraform</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">CloudFormation</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">CDK</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Pulumi</span>
+</div>
+</td>
+<td class="px-8 py-6 font-label text-right text-tertiary font-bold tracking-widest">6+</td>
+</tr>
+<!-- Row 3: Containers -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Orchestration</td>
+<td class="px-8 py-6 text-on-surface-variant italic font-body text-sm">Containerization</td>
+<td class="px-8 py-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Kubernetes</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Docker</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Helm</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">ArgoCD</span>
+</div>
+</td>
+<td class="px-8 py-6 font-label text-right text-tertiary font-bold tracking-widest">5+</td>
+</tr>
+<!-- Row 4: CI/CD -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Pipeline Engineering</td>
+<td class="px-8 py-6 text-on-surface-variant italic font-body text-sm">Continuous Flow</td>
+<td class="px-8 py-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">GitHub Actions</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">GitLab CI</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Jenkins</span>
+</div>
+</td>
+<td class="px-8 py-6 font-label text-right text-tertiary font-bold tracking-widest">7+</td>
+</tr>
+<!-- Row 5: Observability -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Observability</td>
+<td class="px-8 py-6 text-on-surface-variant italic font-body text-sm">Monitoring/Logs</td>
+<td class="px-8 py-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Prometheus</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Grafana</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Datadog</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">CloudWatch</span>
+</div>
+</td>
+<td class="px-8 py-6 font-label text-right text-tertiary font-bold tracking-widest">5+</td>
+</tr>
+<!-- Row 6: Security -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6 font-headline font-bold text-on-surface">Security &amp; Compliance</td>
+<td class="px-8 py-6 text-on-surface-variant italic font-body text-sm">DevSecOps</td>
+<td class="px-8 py-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Snyk</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Vault</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Aqua</span>
+<span class="px-2 py-0.5 bg-surface-container-highest rounded-sm font-label text-[10px] text-on-surface-variant uppercase">Odin</span>
+</div>
+</td>
+<td class="px-8 py-6 font-label text-right text-tertiary font-bold tracking-widest">4+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<!-- Experience -->
+<section class="py-32 px-8 max-w-7xl mx-auto scroll-mt-20" id="Experience">
+<div class="max-w-5xl">
+<p class="font-mono text-xs tracking-[0.3em] text-primary uppercase mb-3 flex items-center gap-2">
+<span class="opacity-50">//</span> Career Timeline
+        </p>
+<h2 class="font-headline text-5xl lg:text-6xl font-extrabold mb-4 tracking-tighter">Where I've <span class="text-primary italic">Shipped</span> Real Impact</h2>
+<p class="font-mono text-sm text-on-surface-variant mb-20 max-w-2xl leading-relaxed">
+<em class="text-[#00bcd4] not-italic">2 years. 5 live production systems. 3 dev teams. Zero dedicated infra team.</em><br/>
+            Every number here is something I built, broke, fixed, and automated myself.
+        </p>
+<div class="timeline">
+<!-- Role 1: DevOps Engineer (Current) -->
+<div class="role-card">
+<div class="mb-8">
+<div class="flex items-center gap-3 mb-3 flex-wrap">
+<span class="font-mono text-[10px] text-primary tracking-widest bg-primary/10 border border-primary/20 px-2.5 py-1 rounded">DEC 2024 — PRESENT</span>
+<span class="font-mono text-[10px] text-[#00bcd4] tracking-widest bg-[#00bcd4]/10 border border-[#00bcd4]/20 px-2.5 py-1 rounded flex items-center gap-1.5 uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-[#00bcd4]"></span> Current
+                        </span>
+</div>
+<h3 class="font-headline text-3xl font-extrabold tracking-tight mb-1">DevOps Engineer</h3>
+<p class="font-mono text-sm text-on-surface-variant">Yotta Tech Ports  ·  <span class="text-[#00bcd4]">Hyderabad, IN</span></p>
+</div>
+<!-- Impact Chips -->
+<div class="flex flex-wrap gap-2.5 mb-10">
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">5</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Live Production Apps</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">3</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Dev Teams Supported</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">20+</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Engineers on AWS</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">&lt;20min</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Avg MTTR</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">~60%</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">SaaS Cost Saved</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">~40%</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Compute Cost Cut</span>
+</div>
+</div>
+<!-- Category Blocks -->
+<div class="space-y-4">
+<div class="cat-block open">
+<div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+<span class="text-lg">🏗️</span>
+<span class="font-mono text-[10px] tracking-[0.2em] uppercase text-on-surface-variant flex-1">Infrastructure Ownership</span>
+<span class="cat-toggle font-mono transition-transform">+</span>
+</div>
+<div class="cat-body">
+<ul class="space-y-4">
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Sole DevOps owner for <strong>5 live production applications</strong> — GitLab, SonarQube, OpenProject, FlexHR, and a custom internal tool — hosted on AWS ECS and EC2, supporting <span class="text-[#00bcd4] font-mono text-xs bg-[#00bcd4]/5 px-1.5 py-0.5 rounded">3 teams · 20+ engineers</span> with no dedicated infra team
+                                    </li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Provisioned and maintained full AWS stack per application: <strong>VPC, subnets, EFS, RDS, ALB, security groups</strong> — eliminating external vendor dependency and cutting estimated SaaS licensing costs by <span class="font-mono text-primary font-bold">~60% annually</span>
+</li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Managed <strong>5 custom subdomain configurations</strong> on Route 53 (CNAME and A records) across all production apps with zero unplanned DNS downtime during any live change
+                                    </li>
+</ul>
+</div>
+</div>
+<div class="cat-block open">
+<div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+<span class="text-lg">🚨</span>
+<span class="font-mono text-[10px] tracking-[0.2em] uppercase text-on-surface-variant flex-1">Incident Response &amp; Reliability</span>
+<span class="cat-toggle font-mono transition-transform">+</span>
+</div>
+<div class="cat-body">
+<ul class="space-y-4">
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Maintained <strong>MTTR under 20 minutes</strong> across all production incidents, with an average initial response time of <span class="font-mono text-primary font-bold">&lt;5 minutes</span> from alert to active triage — across HTTP 500/502 failures on apps used daily by 20+ engineers
+                                    </li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Authored <strong>RCA playbooks for every major incident</strong>, reducing repeat resolution time by an estimated <span class="font-mono text-primary font-bold">~70%</span> for similar failure patterns across all 5 hosted applications
+                                    </li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Built a <strong>CloudWatch + SNS alerting system</strong> with custom dashboards covering 10+ metrics per application — enabling proactive detection before engineers ever report an issue
+                                    </li>
+</ul>
+</div>
+</div>
+<div class="cat-block">
+<div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+<span class="text-lg">💰</span>
+<span class="font-mono text-[10px] tracking-[0.2em] uppercase text-on-surface-variant flex-1">Cost Optimization &amp; FinOps</span>
+<span class="cat-toggle font-mono transition-transform">+</span>
+</div>
+<div class="cat-body">
+<ul class="space-y-4">
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Built a <strong>multi-account Lambda automation</strong> enforcing <code class="text-primary text-xs">stop=true</code> tagging to shut down idle EC2 instances daily — reducing idle compute spend by <span class="font-mono text-primary font-bold">~40%/month</span> across 3 AWS accounts
+                                    </li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Conduct <strong>monthly AWS billing reviews</strong> across 3+ accounts, producing per-service cost reports that flag abnormal spend spikes
+                                    </li>
+</ul>
+</div>
+</div>
+</div>
+<div class="wip-line">
+<div class="wip-dot"></div>
+<span class="font-mono text-xs text-[#00bcd4]">In Progress — Deploying microservices on AWS EKS via GitHub Actions · Integrating Prometheus + Grafana for full observability</span>
+</div>
+<div class="flex flex-wrap gap-2 mt-8">
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">AWS ECS</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">AWS EKS</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">DOCKER</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">LAMBDA</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">TERRAFORM</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">PROMETHEUS</span>
+</div>
+</div>
+<!-- Role 2: Junior DevOps Engineer -->
+<div class="role-card pt-16">
+<div class="mb-8">
+<div class="flex items-center gap-3 mb-3 flex-wrap">
+<span class="font-mono text-[10px] text-primary tracking-widest bg-primary/10 border border-primary/20 px-2.5 py-1 rounded">JUN 2024 — DEC 2024</span>
+<span class="font-mono text-[10px] text-tertiary tracking-widest bg-tertiary/10 border border-tertiary/20 px-2.5 py-1 rounded uppercase">Foundation</span>
+</div>
+<h3 class="font-headline text-3xl font-extrabold tracking-tight mb-1">Junior DevOps Engineer</h3>
+<p class="font-mono text-sm text-on-surface-variant">Yotta Tech Ports  ·  <span class="text-[#00bcd4]">Hyderabad, IN</span></p>
+</div>
+<!-- Impact Chips -->
+<div class="flex flex-wrap gap-2.5 mb-10">
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">~80%</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Deployment Time Saved</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">$3–5K</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Annual License Savings</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">4 wks</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Solo Full-Stack Build</span>
+</div>
+<div class="flex items-center gap-2.5 bg-surface-container border border-outline-variant/30 rounded-lg px-3.5 py-2 hover:border-primary/50 transition-colors">
+<span class="font-mono text-lg font-bold text-primary">100%</span><span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Secrets Removed</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="cat-block open">
+<div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+<span class="text-lg">🚀</span>
+<span class="font-mono text-[10px] tracking-[0.2em] uppercase text-on-surface-variant flex-1">GitLab Self-Hosting — Built From Zero</span>
+<span class="cat-toggle font-mono transition-transform">+</span>
+</div>
+<div class="cat-body">
+<ul class="space-y-4">
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Designed and delivered a <strong>production-grade self-managed GitLab</strong> on AWS ECS using Docker — saving an estimated <span class="font-mono text-primary font-bold">~$3,000–$5,000/year</span> in SaaS licensing costs
+                                    </li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Engineered a full <strong>AWS CodePipeline</strong> that reduced deployment effort from multi-step manual process to a <span class="font-mono text-primary font-bold">single approval click</span> — cutting deployment time by <span class="font-mono text-primary font-bold">~80%</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="cat-block">
+<div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+<span class="text-lg">🔧</span>
+<span class="font-mono text-[10px] tracking-[0.2em] uppercase text-on-surface-variant flex-1">CI/CD Automation &amp; Custom Scripts</span>
+<span class="cat-toggle font-mono transition-transform">+</span>
+</div>
+<div class="cat-body">
+<ul class="space-y-4">
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Built a custom <strong>Dockerfile and buildspec.yml</strong> automating image build and ECR push — reducing configuration effort by <span class="font-mono text-primary font-bold">~65%</span>
+</li>
+<li class="relative pl-6 text-sm leading-relaxed text-on-surface-variant before:content-['▸'] before:absolute before:left-0 before:text-primary">
+                                        Wrote a <strong><code class="text-primary text-xs">fetchsecrets.sh</code> script</strong> removing <span class="font-mono text-primary font-bold">100%</span> of hardcoded secrets from the pipeline
+                                    </li>
+</ul>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-8">
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">AWS ECS</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">DOCKER</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">CODEPIPELINE</span>
+<span class="font-mono text-[10px] text-on-surface-variant/70 border border-outline-variant/30 px-2 py-1 rounded">GITLAB SELF-HOSTED</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights & Blog (Bento Grid Style) -->
+<section class="py-32 bg-surface-container-low px-8" id="Projects">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16">
+<h2 class="font-headline text-5xl md:text-6xl font-extrabold mb-4 tracking-tighter">Insights &amp; Blog</h2>
+<p class="text-on-surface-variant text-xl max-w-2xl leading-relaxed">A selection of high-impact technical demonstrations and foundational industry insights.</p>
+</div>
+<!-- Bento Grid - 3 uniform cards in a row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Terraform Card -->
+<div class="bento-card rounded-[2rem] p-5 flex flex-col h-full border border-outline-variant/10">
+<div class="relative mb-6 overflow-hidden rounded-xl border border-outline-variant/10 aspect-video">
+<div class="absolute top-3 left-3 z-10">
+<span class="bg-primary text-on-primary-fixed px-3 py-1 rounded-full font-label text-[10px] font-extrabold tracking-widest uppercase">TECHNICAL BREAKDOWN</span>
+</div>
+<img alt="Infrastructure visualization" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoOijQjnm5V8hCJ1QImC_EL8spqdXBZ2pgeSm6icjg46J7d5XNYyB-lKQ-CKmXNawu6jkXuisshB9q-wXZGII2dSqG-Yps-ipXlQTFqaQlxYR13VaQI7OHbCVS-EqnFq3AqFDWFUS1-2FRHpcJ6d6pBaNg_jgsSMwQVof-QuJPQhe8v0xfsEMptbEw0LrR9E05pPlJmzfe5rm5SGlootrnJc0B-apL89jdNFEfq7ds4zYDttWP_r_KJvXIQdhiJfpIGSHTQEc4VRQ"/>
+</div>
+<h3 class="font-headline text-xl font-extrabold leading-tight mb-3 text-on-surface">Terraform Basics: Modular AWS Infrastructure</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">A production-ready collection of modular HCL patterns designed for high-availability AWS environments, focusing on networking and ECS orchestration.</p>
+<div class="mt-auto">
+<a class="inline-flex items-center gap-2 text-primary font-label font-bold text-sm hover:underline" href="https://github.com/EeswarSunny/Terraform-basics" target="_blank">
+                            Explore Repository
+                        </a>
+</div>
+</div>
+<!-- IAM Truths Card -->
+<div class="bento-card rounded-[2rem] p-5 flex flex-col h-full border border-outline-variant/10">
+<div class="relative mb-6 overflow-hidden rounded-xl border border-outline-variant/10 aspect-video">
+<div class="absolute top-3 left-3 z-10">
+<span class="bg-tertiary text-on-tertiary-fixed px-3 py-1 rounded-full font-label text-[10px] font-extrabold tracking-widest uppercase">MEDIUM ARTICLE</span>
+</div>
+<img alt="Cloud security visualization" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4FBg5ePcoJ8uM8gkZm1GVieBbLI86_ubYTA24Aa4bqC1jSG3kGuH5bsG06XKLWFE_pjHCGDaV3u1lLhSEvNPodjbiEJzAzkepXK5V9Cl5noRfgsaaAa0ZBa392W63B9Ja4vCTFn7ggocmjqU3mDdtzfIUCOXvRXGgKlDRZhtUNZQVM84yzMlgtYtEZlXSadfU1uULKTwVxuypmWq_PlLXJB5ovx3lZHZZ72WidOdumyEjqtw_DLh5-q3tS_5nNQpqpMayDOaBDag"/>
+</div>
+<h3 class="font-headline text-xl font-extrabold leading-tight mb-3 text-on-surface">4 AWS IAM Truths for Cloud Security</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">An exploration of the Principle of Least Privilege and why standard IAM configurations often fail basic security audits in enterprise environments.</p>
+<div class="mt-auto">
+<a class="inline-flex items-center gap-2 text-tertiary font-label font-bold text-sm hover:underline" href="#">
+                            Read Article
+                        </a>
+</div>
+</div>
+<!-- Docker Card -->
+<div class="bento-card rounded-[2rem] p-5 flex flex-col h-full border border-outline-variant/10">
+<div class="relative mb-6 overflow-hidden rounded-xl border border-outline-variant/10 aspect-video">
+<div class="absolute top-3 left-3 z-10">
+<span class="bg-[#00bcd4] text-black px-3 py-1 rounded-full font-label text-[10px] font-extrabold tracking-widest uppercase">MEDIUM ARTICLE</span>
+</div>
+<img alt="Container visualization" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbXZLdnxUS-xds42xhW_XIeb4s4_G3oTsN4-3CvdRWDv2S27ELGy_qfggZzE2tA3UnMLxdSSVRklhFPjPO_5adcIPswvhFAnKccCYR1MfZ4LotPWP1s5HkXRTmCYNQcGfWkoZt2pcIrYV6zBOyW9jhZD7RE9Uq8rrDu6VFbKREAxItfBQJw6bOTKTjj-VSPIUv2QvUEaJsq0YHziBhyXqTQrvkMuZycf1VAUfXOUG0MIOPEdi3P3bzoybxb29hS8umrbVTkhUF-sE"/>
+</div>
+<h3 class="font-headline text-xl font-extrabold leading-tight mb-3 text-on-surface">Demystifying Docker: 5 Foundational Concepts</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Everything you need to know about container orchestration, from layers and storage to networking and production best practices.</p>
+<div class="mt-auto">
+<a class="inline-flex items-center gap-2 text-[#00bcd4] font-label font-bold text-sm hover:underline" href="#">
+                            Read Article
+                        </a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-32 px-8 max-w-7xl mx-auto" id="Contact">
+<div class="mb-16">
+<span class="font-label text-[#00bcd4] text-xs font-bold tracking-[0.2em] uppercase mb-2 block">CONTACT</span>
+<h2 class="font-headline text-5xl font-extrabold mb-4 relative inline-block">
+                Let's Connect
+                <div class="absolute -bottom-2 left-0 w-16 h-1 bg-[#00bcd4]"></div>
+</h2>
+</div>
+<div class="grid md:grid-cols-2 gap-16 items-start">
+<div class="space-y-4">
+<a class="flex items-center gap-6 p-6 bg-surface-container-high rounded-xl border border-[#00bcd4]/30 hover:bg-[#00bcd4]/5 transition-all group" href="mailto:polunandeeswar2002@gmail.com">
+<div class="w-12 h-12 flex items-center justify-center bg-[#00bcd4]/10 rounded-lg">
+<span class="material-symbols-outlined text-[#00bcd4]">mail</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-lg">Email</h3>
+<p class="text-on-surface-variant text-sm">polunandeeswar2002@gmail.com</p>
+</div>
+<span class="material-symbols-outlined text-[#00bcd4] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</a>
+<div class="flex items-center gap-6 p-6 bg-surface-container-high rounded-xl border border-outline-variant/10 hover:border-primary/20 transition-all group">
+<div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">smartphone</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg">Phone</h3>
+<p class="text-on-surface-variant text-sm">+91 6302308197</p>
+</div>
+</div>
+<a class="flex items-center gap-6 p-6 bg-surface-container-high rounded-xl border border-outline-variant/10 hover:border-primary/20 transition-all group" href="https://linkedin.com/in/polu-nandeeswar" target="_blank">
+<div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">work</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg">LinkedIn</h3>
+<p class="text-on-surface-variant text-sm">linkedin.com/in/polu-nandeeswar</p>
+</div>
+</a>
+<a class="flex items-center gap-6 p-6 bg-surface-container-high rounded-xl border border-outline-variant/10 hover:border-primary/20 transition-all group" href="https://github.com/EeswarSunny/Terraform-basics" target="_blank">
+<div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">terminal</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg">GitHub</h3>
+<p class="text-on-surface-variant text-sm">EeswarSunny/Terraform-basics</p>
+</div>
+</a>
+<a class="flex items-center gap-6 p-6 bg-surface-container-high rounded-xl border border-outline-variant/10 hover:border-primary/20 transition-all group" href="#">
+<div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">history_edu</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg">Medium Article</h3>
+<p class="text-on-surface-variant text-sm">4 AWS IAM Truths for Cloud Security</p>
+</div>
+</a>
+</div>
+<div class="bg-surface-container-high/50 p-10 rounded-2xl border border-outline-variant/10 h-full">
+<span class="font-label text-[#00bcd4] text-xs font-bold tracking-[0.2em] uppercase mb-4 block">OPEN TO</span>
+<h3 class="font-headline text-3xl font-bold mb-6">What I'm looking for</h3>
+<p class="text-on-surface-variant mb-10 leading-relaxed">
+                    Based in Hyderabad, India · Open to remote &amp; hybrid opportunities.
+                </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-4 bg-surface-container-highest/40 p-4 rounded-lg group hover:bg-[#00bcd4]/10 transition-colors">
+<div class="w-2 h-2 rounded-full bg-[#00bcd4]"></div>
+<span class="font-body font-semibold">Senior DevOps Engineer</span>
+</li>
+<li class="flex items-center gap-4 bg-surface-container-highest/40 p-4 rounded-lg group hover:bg-[#00bcd4]/10 transition-colors">
+<div class="w-2 h-2 rounded-full bg-[#00bcd4]"></div>
+<span class="font-body font-semibold">Cloud Infrastructure Engineer</span>
+</li>
+<li class="flex items-center gap-4 bg-surface-container-highest/40 p-4 rounded-lg group hover:bg-[#00bcd4]/10 transition-colors">
+<div class="w-2 h-2 rounded-full bg-[#00bcd4]"></div>
+<span class="font-body font-semibold">Site Reliability Engineer (SRE)</span>
+</li>
+<li class="flex items-center gap-4 bg-surface-container-highest/40 p-4 rounded-lg group hover:bg-[#00bcd4]/10 transition-colors">
+<div class="w-2 h-2 rounded-full bg-[#00bcd4]"></div>
+<span class="font-body font-semibold">MLOps (Progression)</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#131313] dark:bg-[#131313] w-full py-12 px-8 border-t border-outline-variant/5">
+<div class="flex flex-col items-center w-full max-w-7xl mx-auto text-center">
+<p class="font-['Space_Grotesk'] text-sm uppercase tracking-widest text-on-surface-variant/60">© 2026 Nandeeswar Polu. Built with passion for DevOps excellence.</p>
+</div>
+</footer>
+<script>
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const htmlElement = document.documentElement;
+
+      if (localStorage.getItem('color-theme') === 'dark' || (!('color</script></body></html>

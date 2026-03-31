@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevOps Architect | Nandeeswar Reddy Polu</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --primary: #ff8f6f;
+  --primary-dim: #ff6b42;
+  --primary-glow: rgba(255,143,111,0.25);
+  --cyan: #00e5ff;
+  --cyan-dim: #00bcd4;
+  --cyan-glow: rgba(0,229,255,0.2);
+  --gold: #ffc563;
+  --surface: #080808;
+  --surface-1: #111111;
+  --surface-2: #181818;
+  --surface-3: #222222;
+  --surface-4: #2c2c2c;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,143,111,0.3);
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --text-dim: #555;
+  --radius: 14px;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-label: 'Space Grotesk', sans-serif;
+  --surface-rgb: 8, 8, 8;
+  --nav-bg: rgba(8,8,8,0.75);
+  --nav-bg-scrolled: rgba(8,8,8,0.95);
+}
+
+:root.light {
+  --surface: #ffffff;
+  --surface-rgb: 255, 255, 255;
+  --surface-1: #fbfbfb;
+  --surface-2: #f2f2f2;
+  --surface-3: #e8e8e8;
+  --surface-4: #e0e0e0;
+  --nav-bg: rgba(255,255,255,0.75);
+  --nav-bg-scrolled: rgba(255,255,255,0.95);
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(255,143,111,0.5);
+  --text: #111111;
+  --text-muted: #555;
+  --text-dim: #888;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--surface);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Theme Toggle Button ── */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.theme-toggle:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-glow);
+}
+.theme-toggle svg { width: 18px; height: 18px; }
+
+/* ── Custom Cursor ── */
+#cursor {
+  position: fixed;
+  width: 14px; height: 14px;
+  background: var(--primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
+  mix-blend-mode: difference;
+}
+
+/* ── Canvas Background ── */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+/* ── Noise overlay ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Scroll Reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ── Nav ── */
+nav {
+  position: fixed;
+  top: 0; width: 100%;
+  z-index: 100;
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: var(--nav-bg-scrolled);
+  border-bottom-color: rgba(255,143,111,0.12);
+  box-shadow: 0 1px 40px rgba(0,0,0,0.15);
+}
+.nav-logo {
+  display: flex; flex-direction: column;
+  text-decoration: none;
+}
+.nav-logo-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.nav-logo-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--cyan);
+  letter-spacing: 0.2em;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--primary);
+  transition: width 0.25s;
+}
+.nav-links a:hover { color: var(--primary); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  display: flex; align-items: center; gap: 10px;
+}
+.btn {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-glow);
+}
+.btn-primary {
+  background: var(--primary);
+  color: #2a0a00;
+}
+.btn-primary:hover {
+  background: #ff6b42;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--primary-glow);
+}
+
+/* ── Hero ── */
+#Hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 80px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  z-index: 2;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 80px;
+  align-items: center;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(0,229,255,0.06);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  animation: pulse-cyan 2s infinite;
+}
+@keyframes pulse-cyan {
+  0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(0,229,255,0.4); }
+  50% { opacity:0.7; box-shadow: 0 0 0 6px rgba(0,229,255,0); }
+}
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 6vw, 76px);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -2.5px;
+  margin-bottom: 24px;
+}
+.hero-h1 em {
+  font-style: italic;
+  color: var(--primary);
+  -webkit-text-stroke: 0px;
+  position: relative;
+}
+.hero-h1 em::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  border-radius: 2px;
+}
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 40px;
+}
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.hero-actions a {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 28px;
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s;
+  letter-spacing: 0.02em;
+}
+.hero-btn-primary {
+  background: var(--primary);
+  color: #1a0500;
+  box-shadow: 0 0 40px var(--primary-glow);
+}
+.hero-btn-primary:hover {
+  background: #ff6b42;
+  box-shadow: 0 0 60px rgba(255,107,66,0.4);
+  transform: translateY(-2px);
+}
+.hero-btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid rgba(255,143,111,0.3);
+}
+.hero-btn-secondary:hover {
+  background: rgba(255,143,111,0.07);
+  border-color: var(--primary);
+}
+/* Pipeline metric */
+.pipeline-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  position: relative;
+  max-width: 480px;
+  transition: all 0.3s;
+}
+.pipeline-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,143,111,0.04), rgba(255,197,99,0.03));
+  pointer-events: none;
+  border-radius: inherit;
+}
+.pipeline-card:hover { border-color: rgba(255,143,111,0.25); transform: translateY(-2px); }
+.pipeline-icon {
+  width: 44px; height: 44px;
+  background: rgba(255,143,111,0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pipeline-data {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.pipeline-item { text-align: left; }
+.pipeline-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.pipeline-value {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+}
+.pipeline-value.old { color: #555; text-decoration: line-through; }
+.pipeline-value.new { color: #fff; }
+.pipeline-arrow { color: var(--primary); opacity: 0.5; }
+/* Metrics row */
+.hero-metrics {
+  display: flex;
+  gap: 48px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.metric-item { display: flex; flex-direction: column; gap: 4px; }
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+}
+.metric-div {
+  width: 1px;
+  background: var(--border);
+  align-self: stretch;
+}
+/* Hero photo */
+.hero-photo-wrap {
+  position: relative;
+}
+.hero-photo-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  border: 1px solid var(--border);
+}
+.hero-photo-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.3);
+  transition: filter 0.6s;
+}
+.hero-photo-frame:hover img { filter: grayscale(0); }
+.hero-photo-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(var(--surface-rgb), 0.8) 0%, transparent 50%);
+}
+.hero-photo-badge {
+  position: absolute;
+  bottom: 20px; left: 20px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-photo-badge span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+}
+/* Decorative ring */
+.hero-ring {
+  position: absolute;
+  right: -40px; bottom: -40px;
+  width: 180px; height: 180px;
+  border: 1px solid rgba(255,143,111,0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-ring::after {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(255,143,111,0.05);
+  border-radius: 50%;
+}
+
+/* ── Section base ── */
+section { position: relative; z-index: 2; }
+.section-inner { max-width: 1300px; margin: 0 auto; padding: 0 80px; }
+
+/* ── Section Label ── */
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-eyebrow::before {
+  content: '//';
+  opacity: 0.4;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.section-title em { color: var(--primary); font-style: italic; }
+.section-sub {
+  color: var(--text-muted);
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+/* ── Skills ── */
+#Skills {
+  padding: 120px 0;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-1) 100%);
+}
+.skills-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.skills-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 7px 14px;
+  border-radius: 6px;
+}
+.skills-table-wrap {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead tr {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+thead th {
+  padding: 16px 28px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  text-align: left;
+  font-weight: 400;
+}
+thead th:last-child { text-align: right; }
+tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background 0.2s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.02); }
+tbody td {
+  padding: 20px 28px;
+  vertical-align: middle;
+}
+.td-domain {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+.td-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.td-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+tbody tr:hover .chip {
+  border-color: rgba(255,143,111,0.2);
+  color: var(--text);
+}
+.td-years {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  text-align: right;
+  letter-spacing: 0.05em;
+}
+/* Skill row icon */
+.td-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ── Experience ── */
+#Experience {
+  padding: 120px 0;
+  background: var(--surface-1);
+}
+.timeline {
+  position: relative;
+  padding-left: 0;
+}
+.timeline-line {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--border) 10%, var(--border) 90%, transparent);
+}
+.role-card {
+  position: relative;
+  padding-left: 48px;
+  padding-bottom: 80px;
+}
+.role-card:last-child { padding-bottom: 0; }
+.role-dot {
+  position: absolute;
+  left: -5px; top: 32px;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 3px var(--surface-1), 0 0 20px var(--primary);
+}
+.role-header { margin-bottom: 28px; }
+.role-time-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+.badge-primary { background: rgba(255,143,111,0.08); border: 1px solid rgba(255,143,111,0.2); color: var(--primary); }
+.badge-current {
+  background: rgba(0,229,255,0.07);
+  border: 1px solid rgba(0,229,255,0.2);
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.badge-current-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  animation: pulse-cyan 1.8s infinite;
+}
+.badge-foundation { background: rgba(255,197,99,0.08); border: 1px solid rgba(255,197,99,0.2); color: var(--gold); }
+.role-title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.role-company {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.role-company span { color: var(--cyan); }
+/* Impact chips */
+.impact-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.impact-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.impact-chip:hover {
+  border-color: rgba(255,143,111,0.3);
+  background: rgba(255,143,111,0.04);
+  transform: translateY(-2px);
+}
+.impact-chip-val {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+.impact-chip-label {
+  font-family: var(--font-label);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+/* Category accordion */
+.cat-block {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.cat-block:hover { border-color: rgba(255,143,111,0.15); }
+.cat-block.open { border-color: rgba(255,143,111,0.2); }
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(255,255,255,0.01);
+  transition: background 0.2s;
+}
+.cat-header:hover { background: rgba(255,255,255,0.03); }
+.cat-emoji { font-size: 18px; }
+.cat-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex: 1;
+}
+.cat-toggle {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--text-dim);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), color 0.2s;
+  line-height: 1;
+}
+.cat-block.open .cat-toggle { transform: rotate(45deg); color: var(--primary); }
+.cat-body {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  transition: max-height 0.45s cubic-bezier(0.16,1,0.3,1), padding 0.3s;
+}
+.cat-block.open .cat-body { max-height: 800px; padding: 4px 20px 20px; }
+.cat-body ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.cat-body li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+.cat-body li::before {
+  content: '▸';
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--primary);
+  font-size: 11px;
+}
+.cat-body li strong { color: var(--text); font-weight: 600; }
+.cat-body li .mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 700;
+}
+.cat-body li .tag-cyan {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0,229,255,0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+/* WIP bar */
+.wip-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 12px 18px;
+  background: rgba(0,229,255,0.03);
+  border: 1px dashed rgba(0,229,255,0.2);
+  border-radius: 10px;
+}
+.wip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  flex-shrink: 0;
+  animation: pulse-cyan 1.8s infinite;
+}
+.wip-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan-dim);
+}
+/* Stack chips */
+.stack-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 24px;
+}
+.stack-chip {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 5px 11px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.stack-chip:hover { color: var(--primary); border-color: rgba(255,143,111,0.3); }
+
+/* ── Projects / Blog ── */
+#Projects {
+  padding: 120px 0;
+  background: var(--surface);
+}
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.bento-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.bento-card:hover {
+  border-color: rgba(255,143,111,0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,143,111,0.1);
+}
+.bento-img {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+.bento-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+  transition: opacity 0.4s, transform 0.5s;
+}
+.bento-card:hover .bento-img img {
+  opacity: 0.95;
+  transform: scale(1.04);
+}
+.bento-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 5px 12px;
+  border-radius: 100px;
+}
+.badge-orange { background: var(--primary); color: #1a0500; }
+.badge-gold { background: var(--gold); color: #2a1800; }
+.badge-cyan { background: var(--cyan); color: #001a22; }
+.bento-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.bento-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.bento-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  flex: 1;
+  margin-bottom: 20px;
+}
+.bento-link {
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  width: fit-content;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+  margin-top: auto;
+}
+.bento-link-orange { color: var(--primary); background: rgba(255,143,111,0.08); border: 1px solid rgba(255,143,111,0.15); }
+.bento-link-orange:hover { background: rgba(255,143,111,0.15); transform: translateX(3px); }
+.bento-link-gold { color: var(--gold); background: rgba(255,197,99,0.08); border: 1px solid rgba(255,197,99,0.15); }
+.bento-link-gold:hover { background: rgba(255,197,99,0.15); transform: translateX(3px); }
+.bento-link-cyan { color: var(--cyan); background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.15); }
+.bento-link-cyan:hover { background: rgba(0,229,255,0.15); transform: translateX(3px); }
+
+/* ── Contact ── */
+#Contact {
+  padding: 120px 0;
+  background: var(--surface-1);
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.contact-links { display: flex; flex-direction: column; gap: 12px; }
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 22px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+  group: true;
+}
+.contact-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,229,255,0.04), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.contact-link:hover {
+  border-color: rgba(0,229,255,0.25);
+  transform: translateX(4px);
+}
+.contact-link:hover::before { opacity: 1; }
+.contact-icon {
+  width: 44px; height: 44px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+.contact-link:hover .contact-icon { transform: scale(1.1) rotate(-5deg); }
+.contact-text h4 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.contact-text p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.contact-arrow {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 18px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.2s;
+}
+.contact-link:hover .contact-arrow { opacity: 1; transform: translateX(0); }
+/* Open to panel */
+.open-to-panel {
+  background: linear-gradient(135deg, var(--surface-2), var(--surface-1));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 40px;
+  height: 100%;
+}
+.open-to-panel h3 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+.open-to-panel p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+  letter-spacing: 0.05em;
+}
+.role-list { display: flex; flex-direction: column; gap: 10px; list-style: none; }
+.role-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: default;
+}
+.role-list li:hover {
+  background: rgba(0,229,255,0.04);
+  border-color: rgba(0,229,255,0.2);
+  transform: translateX(4px);
+}
+.role-dot-small {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  flex-shrink: 0;
+  transition: box-shadow 0.2s;
+}
+.role-list li:hover .role-dot-small { box-shadow: 0 0 10px var(--cyan); }
+
+/* ── Footer ── */
+footer {
+  position: relative;
+  z-index: 2;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 40px 80px;
+  text-align: center;
+}
+footer p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── SVG Icon helpers ── */
+.ico { display:inline-block; vertical-align:middle; }
+
+/* ── Responsive quick fixes ── */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-photo-wrap { display: none; }
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .section-inner { padding: 0 24px; }
+  #Hero { padding: 100px 24px 60px; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .skills-header { flex-direction: column; align-items: flex-start; }
+  .impact-chips { gap: 8px; }
+}
+
+/* ── Highlight code-like spans in experience ── */
+code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(255,143,111,0.08);
+  color: var(--primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── Animated gradient border on hero card ── */
+@keyframes border-dance {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.glow-border {
+  position: relative;
+}
+.glow-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(90deg, var(--primary), var(--gold), var(--cyan), var(--primary));
+  background-size: 300% 300%;
+  border-radius: 15px;
+  z-index: -1;
+  opacity: 0;
+  animation: border-dance 4s linear infinite;
+  transition: opacity 0.4s;
+}
+.glow-border:hover::after { opacity: 0.5; }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor"></div>
+
+<!-- Animated dot-grid background -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#">
+    <span class="nav-logo-name">Nandeeswar Reddy Polu</span>
+    <span class="nav-logo-title">DevOps · Cloud Engineer</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#Skills">Skills</a></li>
+    <li><a href="#Experience">Experience</a></li>
+    <li><a href="#Projects">Projects</a></li>
+    <li><a href="#Contact">Contact</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+      <svg id="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <svg id="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    </button>
+    <a class="btn btn-outline" href="#">
+      <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Resume
+    </a>
+    <a class="btn btn-primary" href="#Contact">Hire Me →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="Hero">
+  <div class="hero-grid">
+    <!-- Left -->
+    <div>
+      <div class="hero-badge reveal">
+        <span class="hero-badge-dot"></span>
+        Available for High-Impact Roles
+      </div>
+      <h1 class="hero-h1 reveal reveal-delay-1">
+        Results-Driven<br/>
+        <em>Cloud Problem</em><br/>
+        Solver
+      </h1>
+      <p class="hero-sub reveal reveal-delay-2">
+        Specializing in container orchestration (AWS ECS, EKS) and GitOps-driven deployment pipelines using Terraform.
+      </p>
+      <div class="hero-actions reveal reveal-delay-3">
+        <a class="hero-btn-primary" href="#Contact">
+          Contact Me
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </a>
+        <a class="hero-btn-secondary" href="#Experience">
+          Experience
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </a>
+      </div>
+      <!-- Pipeline card -->
+      <div class="pipeline-card glow-border reveal reveal-delay-4">
+        <div class="pipeline-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="pipeline-data">
+          <div class="pipeline-item">
+            <div class="pipeline-label">Before</div>
+            <div class="pipeline-value old">2hr Deploy</div>
+          </div>
+          <div class="pipeline-arrow">
+            <svg width="24" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M0 8h22M16 2l6 6-6 6"/></svg>
+          </div>
+          <div class="pipeline-item">
+            <div class="pipeline-label" style="color:var(--primary)">GitOps Win</div>
+            <div class="pipeline-value new">12min Pipeline</div>
+          </div>
+        </div>
+      </div>
+      <!-- Metrics -->
+      <div class="hero-metrics reveal reveal-delay-5">
+        <div class="metric-item">
+          <div class="metric-value">2+</div>
+          <div class="metric-label">Years Obsessed</div>
+        </div>
+        <div class="metric-div"></div>
+        <div class="metric-item">
+          <div class="metric-value">99.9%</div>
+          <div class="metric-label">Uptime Mindset</div>
+        </div>
+        <div class="metric-div"></div>
+        <div class="metric-item">
+          <div class="metric-value">AWS</div>
+          <div class="metric-label">Certified Expert</div>
+        </div>
+      </div>
+    </div>
+    <!-- Photo -->
+    <div class="hero-photo-wrap reveal reveal-delay-2">
+      <div class="hero-photo-frame">
+        <img src="profile-rectangle.jpg" alt="Nandeeswar Reddy Polu"/>
+        <div class="hero-photo-gradient"></div>
+        <div class="hero-photo-badge">
+          <span class="hero-badge-dot"></span>
+          <span>System Health: Optimal</span>
+        </div>
+      </div>
+      <div class="hero-ring"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="Skills">
+  <div class="section-inner">
+    <div class="skills-header">
+      <div>
+        <div class="section-eyebrow reveal">Technical Proficiency Matrix</div>
+        <h2 class="section-title reveal reveal-delay-1">Engineering <em>Ecosystem</em></h2>
+        <p class="section-sub reveal reveal-delay-2">A high-density audit categorized by domain, sub-groupings, and documented years of production-grade experience.</p>
+      </div>
+      <span class="skills-tag reveal">Updated Q4 2024</span>
+    </div>
+    <div class="skills-table-wrap reveal reveal-delay-2">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44px"></th>
+            <th>Domain</th>
+            <th>Sub-group</th>
+            <th>Core Skillset</th>
+            <th>Experience</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="td-icon" style="background:rgba(255,153,0,0.1)">☁️</div></td>
+            <td><div class="td-domain">Cloud Platform</div></td>
+            <td><div class="td-sub">AWS Ecosystem</div></td>
+            <td><div class="td-chips"><span class="chip">EC2/EKS</span><span class="chip">Lambda</span><span class="chip">IAM/VPC</span><span class="chip">RDS/Aurora</span></div></td>
+            <td><div class="td-years">8+</div></td>
+          </tr>
+          <tr>
+            <td><div class="td-icon" style="background:rgba(100,220,180,0.1)">🏗️</div></td>
+            <td><div class="td-domain">IaC & Automation</div></td>
+            <td><div class="td-sub">Provisioning</div></td>
+            <td><div class="td-chips"><span class="chip">Terraform</span><span class="chip">CloudFormation</span><span class="chip">CDK</span><span class="chip">Pulumi</span></div></td>
+            <td><div class="td-years">6+</div></td>
+          </tr>
+          <tr>
+            <td><div class="td-icon" style="background:rgba(0,180,220,0.1)">🐳</div></td>
+            <td><div class="td-domain">Orchestration</div></td>
+            <td><div class="td-sub">Containerization</div></td>
+            <td><div class="td-chips"><span class="chip">Kubernetes</span><span class="chip">Docker</span><span class="chip">Helm</span><span class="chip">ArgoCD</span></div></td>
+            <td><div class="td-years">5+</div></td>
+          </tr>
+          <tr>
+            <td><div class="td-icon" style="background:rgba(255,143,111,0.1)">⚡</div></td>
+            <td><div class="td-domain">Pipeline Engineering</div></td>
+            <td><div class="td-sub">Continuous Flow</div></td>
+            <td><div class="td-chips"><span class="chip">GitHub Actions</span><span class="chip">GitLab CI</span><span class="chip">Jenkins</span></div></td>
+            <td><div class="td-years">7+</div></td>
+          </tr>
+          <tr>
+            <td><div class="td-icon" style="background:rgba(255,197,99,0.1)">📊</div></td>
+            <td><div class="td-domain">Observability</div></td>
+            <td><div class="td-sub">Monitoring/Logs</div></td>
+            <td><div class="td-chips"><span class="chip">Prometheus</span><span class="chip">Grafana</span><span class="chip">Datadog</span><span class="chip">CloudWatch</span></div></td>
+            <td><div class="td-years">5+</div></td>
+          </tr>
+          <tr>
+            <td><div class="td-icon" style="background:rgba(220,100,100,0.1)">🔒</div></td>
+            <td><div class="td-domain">Security & Compliance</div></td>
+            <td><div class="td-sub">DevSecOps</div></td>
+            <td><div class="td-chips"><span class="chip">Snyk</span><span class="chip">Vault</span><span class="chip">Aqua</span><span class="chip">Odin</span></div></td>
+            <td><div class="td-years">4+</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="Experience">
+  <div class="section-inner">
+    <div style="margin-bottom:60px">
+      <div class="section-eyebrow reveal">Career Timeline</div>
+      <h2 class="section-title reveal reveal-delay-1">Where I've <em>Shipped</em> Real Impact</h2>
+      <p class="section-sub reveal reveal-delay-2" style="font-family:var(--font-mono);font-size:13px;line-height:1.7">
+        <span style="color:var(--cyan)">2 years. 5 live production systems. 3 dev teams. Zero dedicated infra team.</span><br/>
+        Every number here is something I built, broke, fixed, and automated myself.
+      </p>
+    </div>
+    <div class="timeline" style="position:relative">
+      <div class="timeline-line"></div>
+
+      <!-- Role 1 -->
+      <div class="role-card reveal">
+        <div class="role-dot"></div>
+        <div class="role-header">
+          <div class="role-time-badges">
+            <span class="badge badge-primary">Dec 2024 — Present</span>
+            <span class="badge badge-current">
+              <span class="badge-current-dot"></span>Current
+            </span>
+          </div>
+          <div class="role-title">DevOps Engineer</div>
+          <div class="role-company">Yotta Tech Ports · <span>Hyderabad, IN</span></div>
+        </div>
+        <div class="impact-chips">
+          <div class="impact-chip"><div class="impact-chip-val">5</div><div class="impact-chip-label">Live Production<br/>Apps</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">3</div><div class="impact-chip-label">Dev Teams<br/>Supported</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">20+</div><div class="impact-chip-label">Engineers<br/>on AWS</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">&lt;20min</div><div class="impact-chip-label">Avg MTTR</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">~60%</div><div class="impact-chip-label">SaaS Cost<br/>Saved</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">~40%</div><div class="impact-chip-label">Compute<br/>Cost Cut</div></div>
+        </div>
+        <div class="space" style="display:flex;flex-direction:column;gap:10px">
+          <div class="cat-block open">
+            <div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="cat-emoji">🏗️</span>
+              <span class="cat-title">Infrastructure Ownership</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul>
+                <li>Sole DevOps owner for <strong>5 live production applications</strong> — GitLab, SonarQube, OpenProject, FlexHR, and a custom internal tool — hosted on AWS ECS and EC2, supporting <span class="tag-cyan">3 teams · 20+ engineers</span> with no dedicated infra team</li>
+                <li>Provisioned and maintained full AWS stack per application: <strong>VPC, subnets, EFS, RDS, ALB, security groups</strong> — eliminating external vendor dependency and cutting estimated SaaS licensing costs by <span class="mono">~60% annually</span></li>
+                <li>Managed <strong>5 custom subdomain configurations</strong> on Route 53 (CNAME and A records) across all production apps with zero unplanned DNS downtime</li>
+              </ul>
+            </div>
+          </div>
+          <div class="cat-block open">
+            <div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="cat-emoji">🚨</span>
+              <span class="cat-title">Incident Response & Reliability</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul>
+                <li>Maintained <strong>MTTR under 20 minutes</strong> across all production incidents, with avg initial response of <span class="mono">&lt;5 minutes</span> from alert to active triage</li>
+                <li>Authored <strong>RCA playbooks for every major incident</strong>, reducing repeat resolution time by an estimated <span class="mono">~70%</span> for similar failure patterns</li>
+                <li>Built a <strong>CloudWatch + SNS alerting system</strong> with custom dashboards covering 10+ metrics per application</li>
+              </ul>
+            </div>
+          </div>
+          <div class="cat-block">
+            <div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="cat-emoji">💰</span>
+              <span class="cat-title">Cost Optimization & FinOps</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul>
+                <li>Built a <strong>multi-account Lambda automation</strong> enforcing <code>stop=true</code> tagging to shut down idle EC2 instances daily — reducing idle compute spend by <span class="mono">~40%/month</span> across 3 AWS accounts</li>
+                <li>Conduct <strong>monthly AWS billing reviews</strong> across 3+ accounts, producing per-service cost reports that flag abnormal spend spikes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="wip-bar">
+          <div class="wip-dot"></div>
+          <span class="wip-text">In Progress — Deploying microservices on AWS EKS via GitHub Actions · Integrating Prometheus + Grafana for full observability</span>
+        </div>
+        <div class="stack-chips">
+          <span class="stack-chip">AWS ECS</span><span class="stack-chip">AWS EKS</span><span class="stack-chip">Docker</span><span class="stack-chip">Lambda</span><span class="stack-chip">Terraform</span><span class="stack-chip">Prometheus</span><span class="stack-chip">CloudWatch</span>
+        </div>
+      </div>
+
+      <!-- Role 2 -->
+      <div class="role-card reveal reveal-delay-1">
+        <div class="role-dot" style="background:var(--gold);box-shadow:0 0 0 3px var(--surface-1),0 0 20px var(--gold)"></div>
+        <div class="role-header">
+          <div class="role-time-badges">
+            <span class="badge badge-primary">Jun 2024 — Dec 2024</span>
+            <span class="badge badge-foundation">Foundation</span>
+          </div>
+          <div class="role-title">Junior DevOps Engineer</div>
+          <div class="role-company">Yotta Tech Ports · <span>Hyderabad, IN</span></div>
+        </div>
+        <div class="impact-chips">
+          <div class="impact-chip"><div class="impact-chip-val">~80%</div><div class="impact-chip-label">Deploy Time<br/>Saved</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">$3–5K</div><div class="impact-chip-label">Annual License<br/>Savings</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">4 wks</div><div class="impact-chip-label">Solo Full-Stack<br/>Build</div></div>
+          <div class="impact-chip"><div class="impact-chip-val">100%</div><div class="impact-chip-label">Secrets<br/>Removed</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="cat-block open">
+            <div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="cat-emoji">🚀</span>
+              <span class="cat-title">GitLab Self-Hosting — Built From Zero</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul>
+                <li>Designed and delivered a <strong>production-grade self-managed GitLab</strong> on AWS ECS using Docker — saving an estimated <span class="mono">~$3,000–$5,000/year</span> in SaaS licensing costs</li>
+                <li>Engineered a full <strong>AWS CodePipeline</strong> reducing deployment effort from multi-step manual process to a <span class="mono">single approval click</span> — cutting deployment time by <span class="mono">~80%</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="cat-block">
+            <div class="cat-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="cat-emoji">🔧</span>
+              <span class="cat-title">CI/CD Automation & Custom Scripts</span>
+              <span class="cat-toggle">+</span>
+            </div>
+            <div class="cat-body">
+              <ul>
+                <li>Built a custom <strong>Dockerfile and buildspec.yml</strong> automating image build and ECR push — reducing configuration effort by <span class="mono">~65%</span></li>
+                <li>Wrote a <strong><code>fetchsecrets.sh</code> script</strong> removing <span class="mono">100%</span> of hardcoded secrets from the pipeline</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="stack-chips">
+          <span class="stack-chip">AWS ECS</span><span class="stack-chip">Docker</span><span class="stack-chip">CodePipeline</span><span class="stack-chip">GitLab Self-Hosted</span><span class="stack-chip">ECR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS / BLOG -->
+<section id="Projects">
+  <div class="section-inner">
+    <div style="margin-bottom:56px">
+      <div class="section-eyebrow reveal">Work & Writing</div>
+      <h2 class="section-title reveal reveal-delay-1">Insights & Blog</h2>
+      <p class="section-sub reveal reveal-delay-2">A selection of high-impact technical demonstrations and foundational industry insights.</p>
+    </div>
+    <div class="bento-grid">
+      <div class="bento-card reveal">
+        <div class="bento-img">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoOijQjnm5V8hCJ1QImC_EL8spqdXBZ2pgeSm6icjg46J7d5XNYyB-lKQ-CKmXNawu6jkXuisshB9q-wXZGII2dSqG-Yps-ipXlQTFqaQlxYR13VaQI7OHbCVS-EqnFq3AqFDWFUS1-2FRHpcJ6d6pBaNg_jgsSMwQVof-QuJPQhe8v0xfsEMptbEw0LrR9E05pPlJmzfe5rm5SGlootrnJc0B-apL89jdNFEfq7ds4zYDttWP_r_KJvXIQdhiJfpIGSHTQEc4VRQ" alt="Terraform"/>
+          <span class="bento-badge badge-orange">Technical Breakdown</span>
+        </div>
+        <div class="bento-body">
+          <div class="bento-title">Terraform Basics: Modular AWS Infrastructure</div>
+          <p class="bento-desc">A production-ready collection of modular HCL patterns designed for high-availability AWS environments, focusing on networking and ECS orchestration.</p>
+          <a class="bento-link bento-link-orange" href="https://github.com/EeswarSunny/Terraform-basics" target="_blank">
+            Explore Repository
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="bento-card reveal reveal-delay-1">
+        <div class="bento-img">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4FBg5ePcoJ8uM8gkZm1GVieBbLI86_ubYTA24Aa4bqC1jSG3kGuH5bsG06XKLWFE_pjHbiEJzAzkepXK5V9Cl5noRfgsaaAa0ZBa392W63B9Ja4vCTFn7ggocmjqU3mDdtzfIUCOXvRXGgKlDRZhtUNZQVM84yzMlgtYtEZlXSadfU1uULKTwVxuypmWq_PlLXJB5ovx3lZHZZ72WidOdumyEjqtw_DLh5-q3tS_5nNQpqpMayDOaBDag" alt="IAM"/>
+          <span class="bento-badge badge-gold">Medium Article</span>
+        </div>
+        <div class="bento-body">
+          <div class="bento-title">4 AWS IAM Truths for Cloud Security</div>
+          <p class="bento-desc">An exploration of the Principle of Least Privilege and why standard IAM configurations often fail basic security audits in enterprise environments.</p>
+          <a class="bento-link bento-link-gold" href="#">
+            Read Article
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="bento-card reveal reveal-delay-2">
+        <div class="bento-img">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbXZLdnxUS-xds42xhW_XIeb4s4_G3oTsN4-3CvdRWDv2S27ELGy_qfggZzE2tA3UnMLxdSSVRklhFPjPO_5adcIPswvhFAnKccCYR1MfZ4LotPWP1s5HkXRTmCYNQcGfWkoZt2pcIrYV6zBOyW9jhZD7RE9Uq8rrDu6VFbKREAxItfBQJw6bOTKTjj-VSPIUv2QvUEaJsq0YHziBhyXqTQrvkMuZycf1VAUfXOUG0MIOPEdi3P3bzoybxb29hS8umrbVTkhUF-sE" alt="Docker"/>
+          <span class="bento-badge badge-cyan">Medium Article</span>
+        </div>
+        <div class="bento-body">
+          <div class="bento-title">Demystifying Docker: 5 Foundational Concepts</div>
+          <p class="bento-desc">Everything you need to know about container orchestration, from layers and storage to networking and production best practices.</p>
+          <a class="bento-link bento-link-cyan" href="#">
+            Read Article
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="Contact">
+  <div class="section-inner">
+    <div style="margin-bottom:56px">
+      <div class="section-eyebrow reveal">Get In Touch</div>
+      <h2 class="section-title reveal reveal-delay-1">Let's <em>Connect</em></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-links reveal">
+        <a class="contact-link" href="mailto:polunandeeswar2002@gmail.com">
+          <div class="contact-icon" style="background:rgba(0,229,255,0.08)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <div class="contact-text"><h4>Email</h4><p>polunandeeswar2002@gmail.com</p></div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <div class="contact-link" style="cursor:default">
+          <div class="contact-icon" style="background:rgba(255,143,111,0.08)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.09h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/></svg>
+          </div>
+          <div class="contact-text"><h4>Phone</h4><p>+91 6302308197</p></div>
+        </div>
+        <a class="contact-link" href="https://linkedin.com/in/polu-nandeeswar" target="_blank">
+          <div class="contact-icon" style="background:rgba(255,143,111,0.08)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <div class="contact-text"><h4>LinkedIn</h4><p>linkedin.com/in/polu-nandeeswar</p></div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a class="contact-link" href="https://github.com/EeswarSunny/Terraform-basics" target="_blank">
+          <div class="contact-icon" style="background:rgba(255,143,111,0.08)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </div>
+          <div class="contact-text"><h4>GitHub</h4><p>EeswarSunny/Terraform-basics</p></div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a class="contact-link" href="#">
+          <div class="contact-icon" style="background:rgba(255,197,99,0.08)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="contact-text"><h4>Medium</h4><p>4 AWS IAM Truths for Cloud Security</p></div>
+          <span class="contact-arrow">→</span>
+        </a>
+      </div>
+      <div class="open-to-panel reveal reveal-delay-2">
+        <div class="section-eyebrow" style="margin-bottom:12px">Open To</div>
+        <h3>What I'm<br/>looking for</h3>
+        <p>Based in Hyderabad, India · Open to remote & hybrid opportunities</p>
+        <ul class="role-list">
+          <li><div class="role-dot-small"></div>Senior DevOps Engineer</li>
+          <li><div class="role-dot-small"></div>Cloud Infrastructure Engineer</li>
+          <li><div class="role-dot-small"></div>Site Reliability Engineer (SRE)</li>
+          <li><div class="role-dot-small"></div>MLOps (Progression)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Nandeeswar Polu · Built with passion for DevOps excellence</p>
+</footer>
+
+<script>
+// ── Theme Toggle ──────────────────────────────────────────
+const themeBtn = document.getElementById('theme-toggle');
+const htmlEl = document.documentElement;
+const iconDark = document.getElementById('theme-icon-dark');
+const iconLight = document.getElementById('theme-icon-light');
+
+if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  htmlEl.classList.remove('dark');
+  htmlEl.classList.add('light');
+}
+
+function updateThemeIcon() {
+  if (htmlEl.classList.contains('light')) {
+    iconLight.style.display = 'none';
+    iconDark.style.display = 'block';
+  } else {
+    iconLight.style.display = 'block';
+    iconDark.style.display = 'none';
+  }
+}
+updateThemeIcon();
+
+themeBtn.addEventListener('click', () => {
+  htmlEl.classList.toggle('light');
+  htmlEl.classList.toggle('dark');
+  localStorage.setItem('theme', htmlEl.classList.contains('light') ? 'light' : 'dark');
+  updateThemeIcon();
+});
+
+// ── Custom Cursor ──────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => { 
+  cursor.style.left = e.clientX + 'px'; 
+  cursor.style.top = e.clientY + 'px'; 
+});
+document.querySelectorAll('a, button, .cat-header, .impact-chip, .bento-card, .contact-link, .role-list li, .theme-toggle').forEach(el => {
+  el.addEventListener('mouseenter', () => { 
+    cursor.style.width = '44px'; 
+    cursor.style.height = '44px'; 
+    cursor.style.background = 'rgba(255,143,111,0.2)'; 
+  });
+  el.addEventListener('mouseleave', () => { 
+    cursor.style.width = '14px'; 
+    cursor.style.height = '14px'; 
+    cursor.style.background = 'var(--primary)'; 
+  });
+});
+
+// ── Nav scroll ────────────────────────────────────────────
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); });
+
+// ── Scroll Reveal ─────────────────────────────────────────
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Dot-grid canvas ───────────────────────────────────────
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, dots = [];
+const DOT_SPACING = 38;
+const MAX_DIST = 140;
+let mouseX = -999, mouseY = -999;
+
+function initCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  dots = [];
+  for (let x = 0; x < W; x += DOT_SPACING) {
+    for (let y = 0; y < H; y += DOT_SPACING) {
+      dots.push({ x, y, ox: x, oy: y, vx: 0, vy: 0 });
+    }
+  }
+}
+window.addEventListener('resize', initCanvas);
+document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+initCanvas();
+
+function drawDots() {
+  ctx.clearRect(0, 0, W, H);
+  for (const d of dots) {
+    const dx2 = d.ox - mouseX, dy2 = d.oy - mouseY;
+    const dist = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+    let alpha = 0.18;
+    let r = 1.2;
+    if (dist < MAX_DIST) {
+      const t = 1 - dist / MAX_DIST;
+      alpha = 0.18 + t * 0.55;
+      r = 1.2 + t * 2.2;
+    }
+    ctx.beginPath();
+    ctx.arc(d.ox, d.oy, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,143,111,${alpha})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(drawDots);
+}
+drawDots();
+
+// ── Counter animation ─────────────────────────────────────
+function animateCounter(el) {
+  const text = el.textContent;
+  const num = parseFloat(text.replace(/[^0-9.]/g, ''));
+  if (isNaN(num) || num === 0) return;
+  const suffix = text.replace(/[0-9.]/g, '');
+  const duration = 1200;
+  const start = performance.now();
+  const isFloat = num % 1 !== 0;
+  function step(ts) {
+    const p = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const currentVal = ease * num;
+    if (isFloat) {
+      el.textContent = currentVal.toFixed(1) + suffix;
+    } else {
+      el.textContent = Math.round(currentVal) + suffix;
+    }
+    if (p < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.textContent = text;
+    }
+  }
+  requestAnimationFrame(step);
+}
+const metricObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); metricObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+document.querySelectorAll('.metric-value').forEach(el => metricObs.observe(el));
+</script>
+</body>
+</html>

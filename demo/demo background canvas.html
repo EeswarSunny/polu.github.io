@@ -1,0 +1,986 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Background Style Demo — DevOps Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --primary: #ff8f6f;
+  --primary-glow: rgba(255,143,111,0.25);
+  --cyan: #00e5ff;
+  --gold: #ffc563;
+  --surface: #080808;
+  --surface-1: #111111;
+  --surface-2: #181818;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --text-dim: #444;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-label: 'Space Grotesk', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-display);
+  background: var(--surface);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Morphing Dot Cursor ── */
+#cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%,-50%);
+  transition: width .3s cubic-bezier(.16,1,.3,1), height .3s cubic-bezier(.16,1,.3,1), background .3s, box-shadow .3s;
+  mix-blend-mode: normal;
+}
+
+/* ── Page Header ── */
+.page-header {
+  padding: 72px 60px 52px;
+  border-bottom: 1px solid var(--border);
+  position: relative; z-index: 2;
+  background: var(--surface);
+}
+.page-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--primary); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.page-eyebrow::before { content: '//'; opacity: .4; }
+.page-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 50px);
+  font-weight: 900; letter-spacing: -2px; line-height: 1.05;
+  margin-bottom: 14px;
+}
+.page-h1 em { color: var(--primary); font-style: italic; }
+.page-sub {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-muted); line-height: 1.9; max-width: 600px;
+  letter-spacing: .02em;
+}
+.page-sub span { color: var(--cyan); }
+.page-sub strong { color: var(--primary); }
+
+/* ── Demo Section ── */
+.demo-section {
+  position: relative;
+  min-height: 460px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px;
+  border-bottom: 1px solid var(--border);
+  padding: 80px 60px;
+  overflow: hidden;
+  cursor: none;
+  isolation: isolate;
+}
+.demo-section canvas,
+.demo-section .bg-layer {
+  position: absolute;
+  inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── Section Content ── */
+.sec-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px; text-align: center;
+  max-width: 560px;
+}
+.sec-num {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: .25em; text-transform: uppercase; color: var(--text-dim);
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px,3.5vw,42px);
+  font-weight: 900; letter-spacing: -1.5px; line-height: 1.05;
+}
+.sec-desc {
+  font-family: var(--font-mono); font-size: 11.5px;
+  color: var(--text-muted); line-height: 1.85; letter-spacing: .02em;
+}
+.sec-spec {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 4px;
+}
+.spec-pill {
+  font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.07); color: var(--text-dim);
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(6px);
+}
+.verdict {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 5px 13px; border-radius: 100px; margin-top: 6px;
+  backdrop-filter: blur(8px);
+}
+.v-orange { background: rgba(255,143,111,.08); border:1px solid rgba(255,143,111,.25); color:var(--primary); }
+.v-cyan   { background: rgba(0,229,255,.08);   border:1px solid rgba(0,229,255,.25);   color:var(--cyan); }
+.v-gold   { background: rgba(255,197,99,.08);  border:1px solid rgba(255,197,99,.25);  color:var(--gold); }
+
+.sec-badge {
+  position: absolute; top: 20px; right: 22px; z-index: 5;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
+  text-transform: uppercase; padding: 4px 11px; border-radius: 100px;
+  border: 1px solid var(--border); color: var(--text-dim);
+  background: rgba(8,8,8,0.75); backdrop-filter: blur(10px);
+}
+.sec-badge-rec { border-color:rgba(255,143,111,.35); color:var(--primary); }
+.sec-tag {
+  position: absolute; top: 20px; left: 22px; z-index: 5;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--text-dim);
+}
+
+/* ── Selection strip ── */
+#strip {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(8,8,8,0.96);
+  border-top: 1px solid rgba(255,143,111,.2);
+  backdrop-filter: blur(24px);
+  padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 99990;
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.16,1,.3,1);
+}
+#strip.show { transform: translateY(0); }
+#strip p { font-family:var(--font-mono); font-size:11px; color:var(--text-muted); }
+#strip span { color:var(--primary); font-weight:700; }
+.strip-btns { display:flex; gap:10px; }
+.strip-btns button {
+  font-family:var(--font-label); font-size:12px; font-weight:700;
+  padding:8px 20px; border-radius:7px; cursor:pointer; letter-spacing:.03em;
+  transition: background .2s;
+}
+.btn-pick { background:var(--primary); color:#1a0500; border:none; }
+.btn-pick:hover { background:#ff6b42; }
+.btn-dismiss { background:transparent; color:var(--text-dim); border:1px solid var(--border); }
+
+footer {
+  border-top:1px solid var(--border); padding:36px 60px;
+  text-align:center; position:relative; z-index:2; background:var(--surface);
+}
+footer p { font-family:var(--font-mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--text-dim); }
+
+@media(max-width:768px){
+  .page-header,.demo-section{padding:48px 24px;}
+  footer,#strip{padding:20px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── HEADER ── -->
+<header class="page-header">
+  <div class="page-eyebrow">Background Style Demo · DevOps Portfolio</div>
+  <h1 class="page-h1">Choose Your <em>Background</em></h1>
+  <p class="page-sub">
+    12 completely different background types — not just dots.<br/>
+    <span>Move your mouse across each section</span> to feel every effect live.<br/>
+    <strong>Cursor: Morphing Dot ✓ locked in.</strong> Now pick your background.
+  </p>
+</header>
+
+<!-- ════════════════════════════
+  01 — DOT GRID (reference)
+════════════════════════════ -->
+<section class="demo-section" id="s1" data-name="Dot Grid">
+  <canvas id="cv1"></canvas>
+  <span class="sec-tag">01 / 12</span>
+  <span class="sec-badge sec-badge-rec">★ Current Portfolio</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 01 · Dot Grid</div>
+    <div class="sec-title" style="color:var(--primary)">Dot Grid</div>
+    <p class="sec-desc">Your current background — fixed grid of dots that glow and grow near the cursor. The reference point for all others.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Dots</span>
+      <span class="spec-pill">Reactive: Cursor Glow</span>
+      <span class="spec-pill">Motion: None</span>
+      <span class="spec-pill">Weight: Ultra Light</span>
+    </div>
+    <div class="verdict v-orange">✓ Your current — benchmark</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  02 — ANIMATED GRID LINES
+════════════════════════════ -->
+<section class="demo-section" id="s2" data-name="Grid Lines">
+  <canvas id="cv2"></canvas>
+  <span class="sec-tag">02 / 12</span>
+  <span class="sec-badge">Line Grid</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 02 · Grid Lines</div>
+    <div class="sec-title" style="color:var(--primary)">Grid Lines</div>
+    <p class="sec-desc">A fine orthogonal grid of lines — like graph paper or an infrastructure diagram. Lines glow and brighten in a radius around your cursor. Clean, technical, architectural.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Lines</span>
+      <span class="spec-pill">Reactive: Line Glow</span>
+      <span class="spec-pill">Motion: None</span>
+      <span class="spec-pill">Weight: Light</span>
+    </div>
+    <div class="verdict v-orange">Blueprint · Infrastructure diagram feel</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  03 — FLOWING GRADIENT MESH
+════════════════════════════ -->
+<section class="demo-section" id="s3" data-name="Gradient Mesh">
+  <canvas id="cv3"></canvas>
+  <span class="sec-tag">03 / 12</span>
+  <span class="sec-badge">CSS Gradient</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 03 · Gradient Mesh</div>
+    <div class="sec-title" style="color:var(--primary)">Gradient Mesh</div>
+    <p class="sec-desc">Multiple slow-moving radial gradients in brand colors layer and blend across the page. The cursor creates a warm spotlight that interacts with the ambient color field. Cinematic depth.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Radial Gradients</span>
+      <span class="spec-pill">Reactive: Spotlight</span>
+      <span class="spec-pill">Motion: Slow Float</span>
+      <span class="spec-pill">Weight: Zero</span>
+    </div>
+    <div class="verdict v-orange">★ Cinematic · Premium feel</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  04 — ANIMATED NOISE / GRAIN
+════════════════════════════ -->
+<section class="demo-section" id="s4" data-name="Noise Grain">
+  <canvas id="cv4"></canvas>
+  <span class="sec-tag">04 / 12</span>
+  <span class="sec-badge">Texture</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 04 · Noise Grain</div>
+    <div class="sec-title" style="color:var(--gold)">Noise Grain</div>
+    <p class="sec-desc">Animated Perlin-style noise rendered on canvas — a living, breathing texture that shifts and flows. Near the cursor the noise brightens revealing warm color underneath. Organic and editorial.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Noise</span>
+      <span class="spec-pill">Reactive: Brightness</span>
+      <span class="spec-pill">Motion: Continuous</span>
+      <span class="spec-pill">Weight: Medium</span>
+    </div>
+    <div class="verdict v-gold">Organic · Film grain aesthetic</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  05 — PARTICLE FIELD
+════════════════════════════ -->
+<section class="demo-section" id="s5" data-name="Particle Field">
+  <canvas id="cv5"></canvas>
+  <span class="sec-tag">05 / 12</span>
+  <span class="sec-badge">Particles</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 05 · Particle Field</div>
+    <div class="sec-title" style="color:var(--primary)">Particle Field</div>
+    <p class="sec-desc">Dozens of free-floating particles drift slowly in random directions. The cursor repels them creating a clearing. Like dust in a server room caught in light — or microservices drifting in a cluster.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Particles</span>
+      <span class="spec-pill">Reactive: Repulsion</span>
+      <span class="spec-pill">Motion: Continuous Drift</span>
+      <span class="spec-pill">Weight: Light</span>
+    </div>
+    <div class="verdict v-orange">Floating · Microservice cluster feel</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  06 — AURORA BANDS
+════════════════════════════ -->
+<section class="demo-section" id="s6" data-name="Aurora Bands">
+  <canvas id="cv6"></canvas>
+  <span class="sec-tag">06 / 12</span>
+  <span class="sec-badge">Aurora</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 06 · Aurora Bands</div>
+    <div class="sec-title" style="color:var(--cyan)">Aurora Bands</div>
+    <p class="sec-desc">Slow horizontal bands of color flow upward like a northern lights effect. Brand colors — orange, cyan, gold — shift and blend in soft waves. Moving the cursor warps the bands locally. Ethereal and atmospheric.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Sine Bands</span>
+      <span class="spec-pill">Reactive: Local Warp</span>
+      <span class="spec-pill">Motion: Upward Flow</span>
+      <span class="spec-pill">Weight: Light</span>
+    </div>
+    <div class="verdict v-cyan">★ Atmospheric · Ethereal depth</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  07 — TOPOLOGY CONTOURS
+════════════════════════════ -->
+<section class="demo-section" id="s7" data-name="Topology Contours">
+  <canvas id="cv7"></canvas>
+  <span class="sec-tag">07 / 12</span>
+  <span class="sec-badge">Technical</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 07 · Topology Contours</div>
+    <div class="sec-title" style="color:var(--primary)">Topology Contours</div>
+    <p class="sec-desc">Flowing contour lines like a topographic map or a heat-map visualization. Lines animate slowly and react to the cursor creating a peak at your mouse position. Infrastructure elevation mapping.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Contours</span>
+      <span class="spec-pill">Reactive: Peak at cursor</span>
+      <span class="spec-pill">Motion: Slow flow</span>
+      <span class="spec-pill">Weight: Medium</span>
+    </div>
+    <div class="verdict v-orange">Infrastructure map · Heatmap feel</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  08 — SCANLINES / CRT
+════════════════════════════ -->
+<section class="demo-section" id="s8" data-name="Scanlines CRT">
+  <canvas id="cv8"></canvas>
+  <span class="sec-tag">08 / 12</span>
+  <span class="sec-badge">Retro Tech</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 08 · Scanlines</div>
+    <div class="sec-title" style="color:var(--cyan)">Scanlines CRT</div>
+    <p class="sec-desc">Horizontal scanlines pulse slowly downward like a CRT monitor or terminal screen. A sweeping highlight band moves continuously. The cursor creates a local screen-glow. Raw terminal operator identity.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: CSS + Canvas</span>
+      <span class="spec-pill">Reactive: Screen glow</span>
+      <span class="spec-pill">Motion: Scan sweep</span>
+      <span class="spec-pill">Weight: Ultra Light</span>
+    </div>
+    <div class="verdict v-cyan">Terminal operator · CLI identity</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  09 — CIRCUIT BOARD TRACES
+════════════════════════════ -->
+<section class="demo-section" id="s9" data-name="Circuit Traces">
+  <canvas id="cv9"></canvas>
+  <span class="sec-tag">09 / 12</span>
+  <span class="sec-badge">PCB</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 09 · Circuit Traces</div>
+    <div class="sec-title" style="color:var(--primary)">Circuit Board Traces</div>
+    <p class="sec-desc">Randomly generated circuit board traces — orthogonal paths with junction nodes. A signal pulse travels the traces and the cursor illuminates nearby paths. Like electricity moving through infrastructure.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Paths</span>
+      <span class="spec-pill">Reactive: Proximity glow</span>
+      <span class="spec-pill">Motion: Signal pulse</span>
+      <span class="spec-pill">Weight: Medium</span>
+    </div>
+    <div class="verdict v-orange">★ Most DevOps-identity signal</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  10 — GEOMETRIC POLYGONS
+════════════════════════════ -->
+<section class="demo-section" id="s10" data-name="Geometric Polygons">
+  <canvas id="cv10"></canvas>
+  <span class="sec-tag">10 / 12</span>
+  <span class="sec-badge">Low Poly</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 10 · Geometric Polygons</div>
+    <div class="sec-title" style="color:var(--gold)">Low Poly Geometry</div>
+    <p class="sec-desc">A low-poly triangulated mesh fills the background. Each triangle has a slightly different dark tone. Hovering the cursor causes nearby polygons to subtly shift color toward brand orange. Modern and structured.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Triangles</span>
+      <span class="spec-pill">Reactive: Color shift</span>
+      <span class="spec-pill">Motion: None</span>
+      <span class="spec-pill">Weight: Light</span>
+    </div>
+    <div class="verdict v-gold">Structural · Modern geometric</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  11 — RAIN / DATA STREAM
+════════════════════════════ -->
+<section class="demo-section" id="s11" data-name="Data Stream Rain">
+  <canvas id="cv11"></canvas>
+  <span class="sec-tag">11 / 12</span>
+  <span class="sec-badge">Matrix</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 11 · Data Stream</div>
+    <div class="sec-title" style="color:var(--primary)">Data Stream Rain</div>
+    <p class="sec-desc">Short vertical streaks of light rain downward like a data stream or log output. Very subtle and sparse — not Matrix green, but brand orange on near-black. The cursor brightens a local column. Subtle and technical.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: Canvas Streaks</span>
+      <span class="spec-pill">Reactive: Column glow</span>
+      <span class="spec-pill">Motion: Downward fall</span>
+      <span class="spec-pill">Weight: Light</span>
+    </div>
+    <div class="verdict v-orange">Log stream · Data flow identity</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+  12 — PURE CLEAN DARK
+════════════════════════════ -->
+<section class="demo-section" id="s12" data-name="Pure Clean Dark">
+  <div class="bg-layer" id="bg12"></div>
+  <span class="sec-tag">12 / 12</span>
+  <span class="sec-badge">Minimal</span>
+  <div class="sec-content">
+    <div class="sec-num">Background Type 12 · Pure Dark</div>
+    <div class="sec-title" style="color:var(--text)">Pure Clean Dark</div>
+    <p class="sec-desc">No background effect — pure #080808 with a single very subtle radial gradient that follows the cursor like a dim desk lamp. Your content is the only visual. Maximum focus, maximum professionalism.</p>
+    <div class="sec-spec">
+      <span class="spec-pill">Type: CSS Gradient</span>
+      <span class="spec-pill">Reactive: Subtle glow</span>
+      <span class="spec-pill">Motion: None</span>
+      <span class="spec-pill">Weight: Zero</span>
+    </div>
+    <div class="verdict v-cyan">★ Most professional · Zero distraction</div>
+  </div>
+</section>
+
+<!-- ── STRIP ── -->
+<div id="strip">
+  <p>Hovering: <span id="strip-name">—</span></p>
+  <div class="strip-btns">
+    <button class="btn-dismiss" onclick="document.getElementById('strip').classList.remove('show')">✕</button>
+    <button class="btn-pick" onclick="pickThis()">Select This Background →</button>
+  </div>
+</div>
+
+<footer>
+  <p>Background Demo · Morphing Dot cursor active · Hover to preview · Click to select</p>
+</footer>
+
+<script>
+/* ══ CURSOR ══ */
+const cursor = document.getElementById('cursor');
+let MX = 0, MY = 0;
+document.addEventListener('mousemove', e => {
+  MX = e.clientX; MY = e.clientY;
+  cursor.style.left = MX + 'px';
+  cursor.style.top  = MY + 'px';
+});
+document.querySelectorAll('button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '34px'; cursor.style.height = '34px';
+    cursor.style.background = 'rgba(255,143,111,0.15)';
+    cursor.style.boxShadow = '0 0 0 6px rgba(255,143,111,0.06)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '10px'; cursor.style.height = '10px';
+    cursor.style.background = 'var(--primary)';
+    cursor.style.boxShadow = 'none';
+  });
+});
+
+/* ══ SECTION TRACKING ══ */
+const localMouse = {};
+let hoveredSection = null;
+
+document.querySelectorAll('.demo-section').forEach(sec => {
+  localMouse[sec.id] = { x: -9999, y: -9999 };
+  sec.addEventListener('mouseenter', () => {
+    hoveredSection = sec;
+    document.getElementById('strip-name').textContent = sec.dataset.name;
+    document.getElementById('strip').classList.add('show');
+  });
+  sec.addEventListener('mouseleave', () => {
+    localMouse[sec.id] = { x: -9999, y: -9999 };
+  });
+  sec.addEventListener('mousemove', e => {
+    const r = sec.getBoundingClientRect();
+    localMouse[sec.id] = { x: e.clientX - r.left, y: e.clientY - r.top };
+  });
+});
+
+/* ══ PICK ══ */
+function pickThis() {
+  if (!hoveredSection) return;
+  const name = hoveredSection.dataset.name;
+  navigator.clipboard.writeText(name).catch(() => {});
+  document.getElementById('strip').innerHTML = `
+    <p>✓ <span style="color:var(--primary);font-weight:700">"${name}"</span> selected — tell me the number, I'll wire it into your portfolio with the Morphing Dot cursor</p>
+    <div class="strip-btns"><button class="btn-dismiss" onclick="this.closest('#strip').classList.remove('show')">Got it ✓</button></div>
+  `;
+}
+
+/* ══ CANVAS HELPER ══ */
+function setupCanvas(id, secId) {
+  const cv = document.getElementById(id);
+  const sec = document.getElementById(secId);
+  function resize() { cv.width = sec.offsetWidth; cv.height = sec.offsetHeight; }
+  resize();
+  new ResizeObserver(resize).observe(sec);
+  return { cv, ctx: cv.getContext('2d'), sec };
+}
+
+function lm(id) { return localMouse[id] || { x: -9999, y: -9999 }; }
+
+/* ══════════════════════════════════════
+   01 — DOT GRID
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx } = setupCanvas('cv1','s1');
+  const SP=38, MR=140;
+  function draw() {
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x,y} = lm('s1');
+    for (let px=0;px<cv.width+SP;px+=SP) for (let py=0;py<cv.height+SP;py+=SP) {
+      const d=Math.sqrt((px-x)**2+(py-y)**2), t=Math.max(0,1-d/MR);
+      ctx.beginPath(); ctx.arc(px,py,1.1+t*2.3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,143,111,${0.12+t*0.58})`; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   02 — GRID LINES
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx } = setupCanvas('cv2','s2');
+  const SP=40, MR=160;
+  function draw() {
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x,y} = lm('s2');
+    // vertical lines
+    for (let px=0;px<cv.width+SP;px+=SP) {
+      const d=Math.abs(px-x), t=Math.max(0,1-d/MR);
+      ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,cv.height);
+      ctx.strokeStyle=`rgba(255,143,111,${0.04+t*0.4})`; ctx.lineWidth=0.5+t*1.2; ctx.stroke();
+    }
+    // horizontal lines
+    for (let py=0;py<cv.height+SP;py+=SP) {
+      const d=Math.abs(py-y), t=Math.max(0,1-d/MR);
+      ctx.beginPath(); ctx.moveTo(0,py); ctx.lineTo(cv.width,py);
+      ctx.strokeStyle=`rgba(255,143,111,${0.04+t*0.4})`; ctx.lineWidth=0.5+t*1.2; ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   03 — GRADIENT MESH
+══════════════════════════════════════ */
+(()=>{
+  const sec = document.getElementById('s3');
+  const cv = document.getElementById('cv3');
+  function resize() { cv.width=sec.offsetWidth; cv.height=sec.offsetHeight; }
+  resize(); new ResizeObserver(resize).observe(sec);
+  const ctx = cv.getContext('2d');
+  let t=0;
+  // orb definitions: [xPhase, yPhase, xFreq, yFreq, color, size]
+  const orbs=[
+    [0.2,0.3,0.0004,0.0003,'255,143,111',0.5],
+    [0.7,0.6,0.0003,0.0005,'0,229,255',0.45],
+    [0.4,0.8,0.0005,0.0002,'255,197,99',0.4],
+    [0.8,0.2,0.0002,0.0006,'255,143,111',0.35],
+  ];
+  function draw() {
+    t++;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // ambient orbs
+    for (const [xp,yp,xf,yf,col,sz] of orbs) {
+      const ox=(xp+Math.sin(t*xf)*0.25)*cv.width;
+      const oy=(yp+Math.cos(t*yf)*0.25)*cv.height;
+      const r=Math.max(cv.width,cv.height)*sz;
+      const g=ctx.createRadialGradient(ox,oy,0,ox,oy,r);
+      g.addColorStop(0,`rgba(${col},0.12)`);
+      g.addColorStop(1,`rgba(${col},0)`);
+      ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height);
+    }
+    // cursor spotlight
+    const {x,y}=lm('s3');
+    if(x>0){
+      const sg=ctx.createRadialGradient(x,y,0,x,y,200);
+      sg.addColorStop(0,'rgba(255,143,111,0.18)');
+      sg.addColorStop(0.4,'rgba(255,143,111,0.06)');
+      sg.addColorStop(1,'rgba(255,143,111,0)');
+      ctx.fillStyle=sg; ctx.fillRect(0,0,cv.width,cv.height);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   04 — NOISE GRAIN
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx } = setupCanvas('cv4','s4');
+  let t=0;
+  // simple pseudo-noise using sin products
+  function noise(x,y,z){
+    return (Math.sin(x*0.08+z)*Math.cos(y*0.07+z*0.7)+
+            Math.sin(x*0.13+z*1.2)*Math.cos(y*0.11+z*0.5))*0.5+0.5;
+  }
+  const SCALE=4; // pixel block size for perf
+  function draw() {
+    t+=0.012;
+    const {x:mx,y:my}=lm('s4');
+    const cols=Math.ceil(cv.width/SCALE)+1;
+    const rows=Math.ceil(cv.height/SCALE)+1;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(let c=0;c<cols;c++) for(let r=0;r<rows;r++){
+      const px=c*SCALE, py=r*SCALE;
+      const n=noise(c,r,t);
+      // cursor proximity boost
+      const dist=Math.sqrt((px-mx)**2+(py-my)**2);
+      const prox=Math.max(0,1-dist/180);
+      const brightness=n*0.12 + prox*0.35;
+      // tint toward orange near cursor
+      const rr=Math.round(8+brightness*247);
+      const rg=Math.round(8+brightness*135);
+      const rb=Math.round(8+brightness*111);
+      ctx.fillStyle=`rgb(${rr},${rg},${rb})`;
+      ctx.fillRect(px,py,SCALE,SCALE);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   05 — PARTICLE FIELD
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx, sec } = setupCanvas('cv5','s5');
+  const COUNT=80;
+  let pts=[];
+  function build(){
+    pts=[];
+    for(let i=0;i<COUNT;i++) pts.push({
+      x:Math.random()*cv.width, y:Math.random()*cv.height,
+      vx:(Math.random()-.5)*0.4, vy:(Math.random()-.5)*0.4,
+      r:Math.random()*2+0.8, a:Math.random()*0.4+0.1
+    });
+  }
+  build(); new ResizeObserver(()=>{ build(); }).observe(sec);
+  const REP=110;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s5');
+    for(const p of pts){
+      // repel
+      const dx=p.x-mx, dy=p.y-my;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<REP&&d>1){ const f=(1-d/REP)*0.8; p.vx+=(dx/d)*f; p.vy+=(dy/d)*f; }
+      p.vx*=0.97; p.vy*=0.97;
+      p.x+=p.vx; p.y+=p.vy;
+      // wrap
+      if(p.x<0)p.x=cv.width; if(p.x>cv.width)p.x=0;
+      if(p.y<0)p.y=cv.height; if(p.y>cv.height)p.y=0;
+      const prox=d<REP?Math.max(0,1-d/REP):0;
+      const alpha=p.a+prox*0.5;
+      const size=p.r+prox*1.5;
+      ctx.beginPath(); ctx.arc(p.x,p.y,size,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,143,111,${alpha})`; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   06 — AURORA BANDS
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx } = setupCanvas('cv6','s6');
+  let t=0;
+  const BANDS=[
+    { color:'0,229,255',   speed:0.0004, amp:0.08, phase:0.0,  base:0.2 },
+    { color:'255,143,111', speed:0.0003, amp:0.10, phase:2.1,  base:0.45 },
+    { color:'255,197,99',  speed:0.0005, amp:0.07, phase:4.2,  base:0.68 },
+    { color:'0,229,255',   speed:0.0002, amp:0.09, phase:1.1,  base:0.85 },
+  ];
+  function draw(){
+    t++;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s6');
+    for(const b of BANDS){
+      const yCenter=(b.base+Math.sin(t*b.speed+b.phase)*b.amp)*cv.height;
+      // cursor warp: shift band up near cursor x
+      const xFrac=mx/cv.width||0;
+      const warp=mx>0?Math.sin((mx/cv.width)*Math.PI)*-40:0;
+      const bandH=cv.height*0.18;
+      const g=ctx.createLinearGradient(0,yCenter+warp-bandH,0,yCenter+warp+bandH);
+      g.addColorStop(0,`rgba(${b.color},0)`);
+      g.addColorStop(0.4,`rgba(${b.color},0.12)`);
+      g.addColorStop(0.5,`rgba(${b.color},0.18)`);
+      g.addColorStop(0.6,`rgba(${b.color},0.12)`);
+      g.addColorStop(1,`rgba(${b.color},0)`);
+      ctx.fillStyle=g;
+      ctx.fillRect(0,yCenter+warp-bandH,cv.width,bandH*2);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   07 — TOPOLOGY CONTOURS
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx } = setupCanvas('cv7','s7');
+  let t=0;
+  const LINES=14, STEP=6;
+  function heightAt(x,y,t,mx,my){
+    let h=Math.sin(x*0.018+t*0.6)*0.5+Math.cos(y*0.022+t*0.4)*0.5;
+    // cursor peak
+    if(mx>0){
+      const d=Math.sqrt((x-mx)**2+(y-my)**2);
+      h+=Math.max(0,1-d/160)*2.5;
+    }
+    return h;
+  }
+  function draw(){
+    t+=0.015;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s7');
+    for(let lvl=0;lvl<LINES;lvl++){
+      const threshold=-1+(lvl/LINES)*3.5;
+      ctx.beginPath();
+      let started=false;
+      for(let x=0;x<cv.width;x+=STEP){
+        const h=heightAt(x,cv.height/2,t,mx,my);
+        // march horizontally — find y where height == threshold
+        for(let y=0;y<cv.height;y+=STEP){
+          const h1=heightAt(x,y,t,mx,my);
+          const h2=heightAt(x,y+STEP,t,mx,my);
+          if((h1<threshold&&h2>=threshold)||(h1>=threshold&&h2<threshold)){
+            const frac=(threshold-h1)/(h2-h1);
+            const py=y+frac*STEP;
+            if(!started){ ctx.moveTo(x,py); started=true; }
+            else ctx.lineTo(x,py);
+          }
+        }
+      }
+      const prox=mx>0?1:0;
+      const alpha=0.06+lvl/LINES*0.14;
+      ctx.strokeStyle=`rgba(255,143,111,${alpha})`;
+      ctx.lineWidth=0.7; ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   08 — SCANLINES CRT
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx } = setupCanvas('cv8','s8');
+  let t=0;
+  function draw(){
+    t+=0.8;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s8');
+    // scanlines
+    for(let y=0;y<cv.height;y+=4){
+      ctx.fillStyle='rgba(0,229,255,0.018)';
+      ctx.fillRect(0,y,cv.width,1);
+    }
+    // sweeping highlight band
+    const scanY=(t%cv.height);
+    const sg=ctx.createLinearGradient(0,scanY-30,0,scanY+30);
+    sg.addColorStop(0,'rgba(0,229,255,0)');
+    sg.addColorStop(0.5,'rgba(0,229,255,0.06)');
+    sg.addColorStop(1,'rgba(0,229,255,0)');
+    ctx.fillStyle=sg; ctx.fillRect(0,scanY-30,cv.width,60);
+    // cursor screen glow
+    if(mx>0){
+      const g=ctx.createRadialGradient(mx,my,0,mx,my,180);
+      g.addColorStop(0,'rgba(0,229,255,0.12)');
+      g.addColorStop(1,'rgba(0,229,255,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   09 — CIRCUIT BOARD TRACES
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx, sec } = setupCanvas('cv9','s9');
+  let traces=[], pulse=0;
+  function buildTraces(){
+    traces=[];
+    const COLS=Math.ceil(cv.width/80)+1;
+    const ROWS=Math.ceil(cv.height/80)+1;
+    for(let c=0;c<COLS;c++) for(let r=0;r<ROWS;r++){
+      const x=c*80, y=r*80;
+      // horizontal trace
+      if(Math.random()>0.35) traces.push({ type:'h', x1:x, y1:y, x2:x+80, y2:y });
+      // vertical trace
+      if(Math.random()>0.35) traces.push({ type:'v', x1:x, y1:y, x2:x, y2:y+80 });
+      // node
+      traces.push({ type:'node', x, y });
+    }
+  }
+  buildTraces();
+  new ResizeObserver(buildTraces).observe(sec);
+  function draw(){
+    pulse=(pulse+0.02)%1;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s9');
+    for(const tr of traces){
+      if(tr.type==='node'){
+        const d=Math.sqrt((tr.x-mx)**2+(tr.y-my)**2);
+        const prox=Math.max(0,1-d/120);
+        ctx.beginPath(); ctx.arc(tr.x,tr.y,1.5+prox*2.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,143,111,${0.15+prox*0.65})`; ctx.fill();
+      } else {
+        const cx=(tr.x1+tr.x2)/2, cy=(tr.y1+tr.y2)/2;
+        const d=Math.sqrt((cx-mx)**2+(cy-my)**2);
+        const prox=Math.max(0,1-d/130);
+        // pulse along trace
+        const pulseGlow=Math.sin(pulse*Math.PI*2-(tr.x1*0.04+tr.y1*0.04))*0.5+0.5;
+        ctx.beginPath(); ctx.moveTo(tr.x1,tr.y1); ctx.lineTo(tr.x2,tr.y2);
+        ctx.strokeStyle=`rgba(255,143,111,${0.06+prox*0.45+pulseGlow*0.08})`;
+        ctx.lineWidth=0.8+prox*1.4; ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   10 — LOW POLY GEOMETRY
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx, sec } = setupCanvas('cv10','s10');
+  let tris=[];
+  function buildTris(){
+    tris=[];
+    const CX=Math.ceil(cv.width/70)+2;
+    const CY=Math.ceil(cv.height/70)+2;
+    // build point grid with jitter
+    const pts=[];
+    for(let c=0;c<=CX;c++) for(let r=0;r<=CY;r++){
+      pts.push({ x:c*70+(Math.random()-.5)*28, y:r*70+(Math.random()-.5)*28 });
+    }
+    // simple row-based triangulation
+    for(let c=0;c<CX;c++) for(let r=0;r<CY;r++){
+      const i=c*(CY+1)+r;
+      const a=pts[i], b=pts[i+1], d=pts[i+CY+1], e=pts[i+CY+2];
+      if(a&&b&&d) tris.push([a,b,d]);
+      if(b&&e&&d) tris.push([b,e,d]);
+    }
+  }
+  buildTris(); new ResizeObserver(buildTris).observe(sec);
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s10');
+    for(const [a,b,c] of tris){
+      const cx=(a.x+b.x+c.x)/3, cy=(a.y+b.y+c.y)/3;
+      const d=Math.sqrt((cx-mx)**2+(cy-my)**2);
+      const prox=Math.max(0,1-d/160);
+      const base=Math.random()*0.015+0.02;
+      const bright=base+prox*0.18;
+      const r=Math.round(8+bright*247), g=Math.round(8+bright*135), bl=Math.round(8+bright*111);
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.lineTo(c.x,c.y); ctx.closePath();
+      ctx.fillStyle=`rgb(${r},${g},${bl})`; ctx.fill();
+      ctx.strokeStyle=`rgba(255,143,111,${0.03+prox*0.15})`; ctx.lineWidth=0.4; ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   11 — DATA STREAM RAIN
+══════════════════════════════════════ */
+(()=>{
+  const { cv, ctx, sec } = setupCanvas('cv11','s11');
+  let streams=[];
+  const COUNT=40;
+  function buildStreams(){
+    streams=[];
+    for(let i=0;i<COUNT;i++) streams.push({
+      x:Math.random()*cv.width,
+      y:Math.random()*cv.height,
+      speed:Math.random()*1.2+0.4,
+      len:Math.random()*40+15,
+      alpha:Math.random()*0.3+0.08
+    });
+  }
+  buildStreams(); new ResizeObserver(buildStreams).observe(sec);
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {x:mx,y:my}=lm('s11');
+    for(const s of streams){
+      s.y+=s.speed;
+      if(s.y>cv.height+s.len){ s.y=-s.len; s.x=Math.random()*cv.width; }
+      // column glow
+      const dx=s.x-mx;
+      const colProx=Math.max(0,1-Math.abs(dx)/90);
+      const g=ctx.createLinearGradient(0,s.y-s.len,0,s.y);
+      g.addColorStop(0,'rgba(255,143,111,0)');
+      g.addColorStop(0.7,`rgba(255,143,111,${s.alpha+colProx*0.35})`);
+      g.addColorStop(1,`rgba(255,197,99,${s.alpha*0.5+colProx*0.2})`);
+      ctx.fillStyle=g; ctx.fillRect(s.x,s.y-s.len,1.2,s.len);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   12 — PURE CLEAN DARK
+══════════════════════════════════════ */
+(()=>{
+  const sec = document.getElementById('s12');
+  const layer = document.getElementById('bg12');
+  layer.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:0;transition:background 0.1s;';
+  sec.addEventListener('mousemove', e => {
+    const r=sec.getBoundingClientRect();
+    const x=e.clientX-r.left, y=e.clientY-r.top;
+    layer.style.background=`radial-gradient(circle 280px at ${x}px ${y}px, rgba(255,143,111,0.07) 0%, transparent 100%)`;
+  });
+  sec.addEventListener('mouseleave', ()=>{ layer.style.background='none'; });
+})();
+</script>
+</body>
+</html>
+```
+
+---
+
+### The 12 completely different background types:
+
+| # | Type | Tech | Feel |
+|---|------|------|------|
+| **01** | Dot Grid | Canvas dots | Your current — reference |
+| **02** | Grid Lines | Canvas lines | Blueprint / graph paper |
+| **03** | Gradient Mesh | Radial gradients | Cinematic / premium |
+| **04** | Noise Grain | Canvas noise | Film grain / organic |
+| **05** | Particle Field | Physics particles | Floating microservices |
+| **06** | Aurora Bands | Sine wave bands | Atmospheric / ethereal |
+| **07** | Topology Contours | Contour lines | Infrastructure heatmap |
+| **08** | Scanlines CRT | Sweep animation | Terminal / CLI identity |
+| **09** | Circuit Traces | Path + pulse | PCB / DevOps signature |
+| **10** | Low Poly Geometry | Triangulated mesh | Modern / structured |
+| **11** | Data Stream Rain | Falling streaks | Log output / data flow |
+| **12** | Pure Clean Dark | CSS gradient only | Zero distraction |
+
+Tell me the **number** you pick and I'll wire it + Morphing Dot cursor directly into your portfolio.
