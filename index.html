@@ -306,6 +306,17 @@
       display: none;
     }
 
+    .btn-menu {
+      display: none;
+      padding: 7px;
+      width: 36px;
+      height: 36px;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
@@ -742,29 +753,8 @@
       background: var(--surface-1);
       border: 1px solid var(--border);
       border-radius: 18px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
     }
 
-    .skills-table-wrap::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .skills-table-wrap::-webkit-scrollbar-track {
-      background: var(--surface-1);
-      border-radius: 10px;
-    }
-
-    .skills-table-wrap::-webkit-scrollbar-thumb {
-      background: var(--primary-subtle);
-      border-radius: 10px;
-    }
-
-    .skills-table-wrap::-webkit-scrollbar-thumb:hover {
-      background: var(--primary);
-    }
 
     table {
       width: 100%;
@@ -895,11 +885,75 @@
     }
 
     @media (max-width: 900px) {
-      .skills-table-wrap table {
-        min-width: 700px;
+      .skills-table-wrap {
+        border: none;
+        background: transparent;
       }
-      .scroll-hint {
+
+      .skills-table-wrap table, 
+      .skills-table-wrap tbody, 
+      .skills-table-wrap tr, 
+      .skills-table-wrap td {
+        display: block;
+        width: 100%;
+      }
+
+      .skills-table-wrap thead {
+        display: none;
+      }
+
+      .skills-table-wrap tr {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .skills-table-wrap td {
+        padding: 0 !important;
+        border: none !important;
+      }
+
+      .skills-table-wrap td:nth-child(1) { /* Icon */
+        display: flex;
+        width: 36px;
+        height: 36px;
+        margin-bottom: 0;
+      }
+
+      .skills-table-wrap td:nth-child(2) { /* Domain */
+        display: flex;
+        align-items: center;
+        margin-top: -48px; /* Offset to sit next to icon */
+        margin-left: 48px;
+        min-height: 36px;
+      }
+
+      .skills-table-wrap td:nth-child(3) { /* Chips */
+        margin-top: 12px;
+      }
+
+      .skills-table-wrap td:nth-child(4) { /* Years */
         display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--text-dim);
+        border-top: 1px solid var(--border) !important;
+        padding-top: 12px !important;
+        margin-top: 4px;
+      }
+
+      .skills-table-wrap td:nth-child(4)::before {
+        content: 'Experience:';
+        font-family: var(--font-label);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
     }
 
@@ -1651,29 +1705,24 @@
       }
 
       .nav-cta {
-        gap: 4px;
+        gap: 6px;
       }
 
-      .btn-cv {
-        display: inline;
-        font-weight: 700;
-        margin-left: 4px;
-      }
-
-      .btn-label, .btn-arrow {
-        display: none;
-      }
-
-      .btn {
-        padding: 7px 10px;
+      .btn-outline {
+        display: none !important;
       }
 
       .btn-primary {
         padding: 7px 14px;
+        font-size: 13px;
+      }
+
+      .btn-menu {
+        display: flex;
       }
 
       .theme-toggle {
-        margin-right: 2px;
+        margin-right: 0;
       }
     }
 
@@ -1703,6 +1752,112 @@
       color: var(--primary);
       padding: 1px 6px;
       border-radius: 4px;
+    }
+
+    /* ── Mobile Menu Overlay ── */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(10, 10, 10, 0.4);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .mobile-menu-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-menu-backdrop {
+      position: absolute;
+      inset: 0;
+    }
+
+    .mobile-menu-content {
+      width: 85%;
+      max-width: 320px;
+      background: var(--surface);
+      height: 100%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 1px solid var(--border);
+    }
+
+    .mobile-menu-overlay.active .mobile-menu-content {
+      transform: translateX(0);
+    }
+
+    .mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .menu-close-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .mobile-menu-cta {
+      margin-bottom: 40px;
+    }
+
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .mobile-link {
+      text-decoration: none;
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: color 0.2s;
+    }
+
+    .mobile-link span {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--primary);
+      opacity: 0.6;
+    }
+
+    .mobile-link:hover {
+      color: var(--primary);
+    }
+
+    .mobile-menu-footer {
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
     }
 
     /* ── Animated gradient border on hero card ── */
@@ -1791,6 +1946,13 @@
         <span class="btn-cv">CV</span>
       </a>
       <a class="btn btn-primary" href="mailto:polunandeeswar2002@gmail.com?subject=Inquiry: Cloud/DevOps Engineering Role">Hire Me<span class="btn-arrow"> →</span></a>
+      <button class="btn btn-menu" id="MenuToggle" aria-label="Toggle Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </nav>
 
@@ -1894,10 +2056,7 @@
           <h2 class="section-title reveal reveal-delay-1">Stack & <em>Tooling</em></h2>
           <p class="section-sub reveal reveal-delay-2">Production-verified tools across cloud infrastructure, IaC, CI/CD, orchestration, observability, and security.</p>
         </div>
-        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-          <div class="scroll-hint">← Swipe to View →</div>
-          <span class="skills-tag reveal">Last updated Q1 2026</span>
-        </div>
+        <span class="skills-tag reveal">Last updated Q1 2026</span>
       </div>
       <div class="skills-table-wrap reveal reveal-delay-2">
         <table>
@@ -2660,7 +2819,66 @@
       }, { threshold: 0.3 });
       contactObs.observe(contactSection);
     }
+    // ── Mobile Menu Toggle ────────────────────────────────────
+    const menuToggle = document.getElementById('MenuToggle');
+    const mobileMenu = document.getElementById('MobileMenu');
+    const menuLinks = document.querySelectorAll('.mobile-link');
+    const closeMenuBtn = document.getElementById('CloseMenu');
+
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      const isActive = mobileMenu.classList.contains('active');
+      document.body.style.overflow = isActive ? 'hidden' : '';
+    }
+
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', toggleMenu);
+      if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
+      
+      menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+    }
   </script>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="MobileMenu" class="mobile-menu-overlay">
+    <div class="mobile-menu-backdrop" id="CloseMenuOverlay"></div>
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-header">
+        <div class="mobile-logo-wrap">
+          <div class="nav-logo-name">Nandeeswar</div>
+          <div class="nav-logo-title">Cloud Engineer</div>
+        </div>
+        <button class="menu-close-btn" id="CloseMenu">✕</button>
+      </div>
+      
+      <div class="mobile-menu-cta">
+        <a class="btn btn-primary" href="assets/resume.pdf" download="Polu_Nandeeswar_Resume.pdf" style="width:100%; justify-content:center;">
+          <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download CV
+        </a>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="#Skills" class="mobile-link"><span>01</span> Skills Matrix</a>
+        <a href="#Experience" class="mobile-link"><span>02</span> Experience</a>
+        <a href="#Blogs" class="mobile-link"><span>03</span> Technical Blog</a>
+        <a href="#Contact" class="mobile-link"><span>04</span> Let's Connect</a>
+      </nav>
+
+      <div class="mobile-menu-footer">
+        <p>© 2026 Nandeeswar Reddy Polu</p>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
