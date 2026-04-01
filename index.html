@@ -1583,28 +1583,52 @@
     }
 
     @media (max-width: 500px) {
+      .nav-logo-name {
+        font-size: 14px;
+      }
+
       .nav-logo-title {
-        display: none;
+        font-size: 10px;
+        letter-spacing: 0.05em;
+        margin-top: 1px;
       }
 
       .nav-cta {
-        gap: 6px;
+        gap: 4px;
       }
 
-      .btn-label {
+      .btn-label, .btn-arrow {
         display: none;
       }
 
       .btn {
-        padding: 8px 12px;
+        padding: 7px 10px;
       }
 
       .btn-primary {
-        padding: 8px 16px;
+        padding: 7px 14px;
       }
 
       .theme-toggle {
-        margin-right: 4px;
+        margin-right: 2px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .hero-actions {
+        gap: 8px;
+        flex-wrap: nowrap;
+      }
+
+      .hero-actions a {
+        padding: 10px 16px;
+        font-size: 13px;
+        gap: 6px;
+      }
+
+      .hero-actions svg {
+        width: 14px;
+        height: 14px;
       }
     }
 
@@ -1702,7 +1726,7 @@
         </svg>
         <span class="btn-label">Resume</span>
       </a>
-      <a class="btn btn-primary" href="mailto:polunandeeswar2002@gmail.com?subject=Inquiry: Cloud/DevOps Engineering Role">Hire Me →</a>
+      <a class="btn btn-primary" href="mailto:polunandeeswar2002@gmail.com?subject=Inquiry: Cloud/DevOps Engineering Role">Hire Me<span class="btn-arrow"> →</span></a>
     </div>
   </nav>
 
