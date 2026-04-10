@@ -5,8 +5,14 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Nandeeswar Reddy Polu</title>
+
+  <!-- Performance: Preconnect to font provider -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts: Optimized loading with font-display: swap -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@300;400;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;600;700&display=swap"
     rel="stylesheet" />
   <style>
     :root {
@@ -20,6 +26,11 @@
       --cyan-faint: rgba(0, 229, 255, 0.08);
       --cyan-subtle: rgba(0, 229, 255, 0.2);
       --cyan-glow: rgba(0, 229, 255, 0.2);
+      --green: #10b981; /* Emerald green accent */
+      --green-dim: #059669;
+      --green-faint: rgba(16, 185, 129, 0.08);
+      --green-subtle: rgba(16, 185, 129, 0.2);
+      --green-glow: rgba(16, 185, 129, 0.25);
       --gold: #ffb085;  /* Pale warm orange */
       --gold-faint: rgba(255, 176, 133, 0.1);
       --surface: #080808;
@@ -35,7 +46,7 @@
       --radius: 14px;
       --font-display: 'Plus Jakarta Sans', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --font-label: 'Space Grotesk', sans-serif;
+      --font-label: 'Manrope', sans-serif;
       --surface-rgb: 8, 8, 8;
       --nav-bg: rgba(8, 8, 8, 0.75);
       --nav-bg-scrolled: rgba(8, 8, 8, 0.95);
@@ -90,7 +101,7 @@
       background: var(--surface);
       color: var(--text);
       overflow-x: hidden;
-      cursor: none;
+      cursor: none; /* Custom cursor - overridden in prefers-reduced-motion */
       transition: background 0.3s, color 0.3s;
     }
 
@@ -98,7 +109,7 @@
     .theme-toggle {
       background: transparent;
       border: 1px solid var(--border);
-      color: var(--text-muted);
+      color: var(--primary);
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -113,11 +124,14 @@
       border-color: var(--primary);
       color: var(--primary);
       background: var(--primary-glow);
+      transform: scale(1.05);
     }
 
     .theme-toggle svg {
       width: 18px;
       height: 18px;
+      stroke: var(--primary);
+      color: var(--primary);
     }
 
     /* ── Custom Cursor ── */
@@ -214,7 +228,7 @@
     nav.scrolled {
       background: var(--nav-bg-scrolled);
       backdrop-filter: blur(24px) saturate(180%);
-      border-bottom-color: var(--primary-subtle);
+      border-bottom-color: var(--border);
       box-shadow: var(--shadow);
     }
 
@@ -306,38 +320,126 @@
       display: none;
     }
 
-    .btn-menu {
+    /* ── Hamburger Button ── */
+    .hamburger-btn {
       display: none;
-      padding: 7px;
-      width: 36px;
-      height: 36px;
+      flex-direction: column;
       justify-content: center;
-      background: var(--surface-2);
+      align-items: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      background: transparent;
       border: 1px solid var(--border);
-      color: var(--text);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      flex-shrink: 0;
     }
 
+    .hamburger-btn:hover {
+      border-color: var(--primary);
+      background: transparent;
+    }
+
+    .hamburger-btn:hover .hb-line {
+      background: var(--primary);
+    }
+
+    .hamburger-btn .hb-line {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 2px;
+      transform-origin: center;
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                  opacity 0.25s,
+                  width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* Open state: morph lines → X */
+    .hamburger-btn.open .hb-line:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    .hamburger-btn.open .hb-line:nth-child(2) {
+      opacity: 0;
+      width: 0;
+    }
+    .hamburger-btn.open .hb-line:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* ── Mobile CTA: icon-only compact form ── */
+    .nav-btn-icon {
+      display: none; /* only shown on mobile */
+    }
+
+    /* ── Button Hierarchy: Primary → Secondary → Tertiary ── */
+    /*
+     * THREE-TIER BUTTON SYSTEM:
+     *
+     * 1. PRIMARY (.btn-primary) - High emphasis
+     *    - Orange background with glow
+     *    - Main CTAs: "Hire Me", "Contact Me"
+     *    - Use sparingly (1-2 per page)
+     *
+     * 2. SECONDARY (.btn-secondary) - Medium emphasis
+     *    - Cyan background with glow
+     *    - Important actions: "View Resume", "See Projects", "Experience"
+     *    - Supporting actions that deserve attention
+     *
+     * 3. TERTIARY (.btn-tertiary, .btn-outline) - Low emphasis
+     *    - Transparent with border (ghost style)
+     *    - Less important actions: "Learn More", "View Details"
+     *    - Fallback for less critical interactions
+     */
+
+    /* PRIMARY: High emphasis - Main CTAs (orange, bold, glowing) */
+    .btn-primary {
+      background: var(--primary);
+      color: #2a0a00;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 107, 66, 0.35);
+    }
+
+    /* SECONDARY: Medium emphasis - Important actions (cyan, solid) */
+    .btn-secondary {
+      background: var(--cyan);
+      color: #001f24;
+      box-shadow: 0 4px 16px var(--cyan-glow);
+    }
+
+    :root.light .btn-secondary {
+      background: var(--cyan);
+      color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+      background: var(--cyan-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0, 229, 255, 0.3);
+    }
+
+    /* TERTIARY: Low emphasis - Ghost/outline style */
+    .btn-tertiary,
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
     }
 
+    .btn-tertiary:hover,
     .btn-outline:hover {
       border-color: var(--primary);
       color: var(--primary);
-      background: var(--primary-glow);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #2a0a00;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dim);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px var(--primary-glow);
+      background: var(--primary-faint);
     }
 
     /* ── Hero ── */
@@ -364,12 +466,12 @@
       align-items: center;
       gap: 8px;
       padding: 6px 14px;
-      background: var(--cyan-faint);
-      border: 1px solid var(--cyan-subtle);
+      background: var(--green-faint);
+      border: 1px solid var(--green-subtle);
       border-radius: 100px;
       font-family: var(--font-mono);
       font-size: 13px;
-      color: var(--cyan);
+      color: var(--green);
       letter-spacing: 0.15em;
       text-transform: uppercase;
       margin-bottom: 28px;
@@ -379,8 +481,8 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--cyan);
-      animation: pulse-cyan 1.5s infinite ease-in-out;
+      background: var(--green);
+      animation: pulse-green 1.5s infinite ease-in-out;
     }
 
     @keyframes pulse-cyan {
@@ -395,6 +497,21 @@
       100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(0, 229, 255, 0);
+      }
+    }
+
+    @keyframes pulse-green {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
       }
     }
 
@@ -457,14 +574,32 @@
     }
 
     .hero-btn-secondary {
-      background: transparent;
-      color: var(--primary);
-      border: 1px solid var(--primary-subtle);
+      background: var(--cyan);
+      color: #001f24;
+      box-shadow: 0 0 30px var(--cyan-glow);
+    }
+
+    :root.light .hero-btn-secondary {
+      background: var(--cyan);
+      color: #ffffff;
     }
 
     .hero-btn-secondary:hover {
-      background: var(--primary-faint);
-      border-color: var(--primary);
+      background: var(--cyan-dim);
+      box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .hero-btn-tertiary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .hero-btn-tertiary:hover {
+      background: var(--surface-0);
+      border-color: var(--cyan-subtle);
+      color: var(--cyan);
     }
 
     /* Pipeline metric */
@@ -1161,14 +1296,19 @@
     }
 
     .cat-body {
-      max-height: 0;
+      display: grid;
+      grid-template-rows: 0fr;
       overflow: hidden;
+      transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s;
       padding: 0 20px;
-      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s;
+    }
+
+    .cat-body > * {
+      min-height: 0; /* Required for grid collapse to work */
     }
 
     .cat-block.open .cat-body {
-      max-height: 800px;
+      grid-template-rows: 1fr;
       padding: 4px 20px 20px;
     }
 
@@ -1392,7 +1532,27 @@
       color: var(--text-muted);
       line-height: 1.65;
       flex: 1;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
+    }
+
+    .bento-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .bento-meta-tag {
+      padding: 3px 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      font-weight: 500;
     }
 
     .bento-link {
@@ -1699,6 +1859,72 @@
       .impact-chips {
         gap: 8px;
       }
+
+      /* Fix Contact section for mobile */
+      #Contact {
+        padding: 60px 0 80px 0;
+      }
+
+      .contact-link {
+        padding: 16px 18px;
+        gap: 14px;
+      }
+
+      .contact-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .contact-text h4 {
+        font-size: 14px;
+      }
+
+      .contact-text p {
+        font-size: 12px;
+        word-break: break-word;
+      }
+
+      .open-to-panel {
+        padding: 28px 20px;
+      }
+
+      .open-to-panel h3 {
+        font-size: 20px;
+      }
+
+      .open-to-panel ul li {
+        font-size: 13px;
+      }
+    }
+
+    /* ── Mobile Nav Responsive ── */
+    @media (max-width: 1024px) {
+      /* Hide desktop nav links on mobile - use hamburger menu instead */
+      .nav-links {
+        display: none !important;
+      }
+
+      /* Show hamburger */
+      .hamburger-btn {
+        display: flex;
+      }
+
+      /* Hide navbar CTA buttons on mobile - they're in the mobile menu */
+      .nav-cta .btn-secondary,
+      .nav-cta .btn-primary {
+        display: none !important;
+      }
+
+      /* Keep theme toggle and hamburger visible */
+      .theme-toggle {
+        display: flex !important;
+      }
+
+      /* Shrink CTA buttons: hide text labels, show only icons */
+      .btn-label {
+        display: none;
+      }
+
     }
 
     @media (max-width: 500px) {
@@ -1714,23 +1940,6 @@
 
       .nav-cta {
         gap: 6px;
-      }
-
-      .btn-outline {
-        display: none !important;
-      }
-
-      .btn-primary {
-        padding: 7px 14px;
-        font-size: 13px;
-      }
-
-      .btn-menu {
-        display: flex;
-      }
-
-      .theme-toggle {
-        margin-right: 0;
       }
     }
 
@@ -1750,6 +1959,38 @@
         width: 14px;
         height: 14px;
       }
+
+      /* Extra small devices - ensure contact section fits */
+      #Contact {
+        padding: 40px 0 60px 0;
+      }
+
+      .section-inner {
+        padding: 0 16px;
+      }
+
+      .contact-link {
+        padding: 14px 16px;
+        gap: 12px;
+      }
+
+      .contact-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .contact-text h4 {
+        font-size: 13px;
+      }
+
+      .contact-text p {
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      .contact-links {
+        gap: 10px;
+      }
     }
 
     /* ── Highlight code-like spans in experience ── */
@@ -1762,131 +2003,220 @@
       border-radius: 4px;
     }
 
-    /* ── Mobile Menu Overlay ── */
+    /* ── Mobile Menu Dropdown Panel ── */
     #MobileNavOverlay {
-      position: fixed !important;
-      inset: 0 !important;
-      z-index: 99999 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      background: rgba(8, 8, 8, 0.92) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-      padding: 28px 32px 40px !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      transition: opacity 0.3s ease !important;
+      position: fixed;
+      top: var(--navbar-height, 64px);
+      left: 0;
+      right: 0;
+      z-index: 101; /* Above navbar (z-index: 100) */
+      background: var(--nav-bg-scrolled);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid var(--primary-subtle);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+      /* Hidden state */
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      /* Transition */
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.25s ease,
+                  visibility 0s 0.35s;
+
+      /* Layout */
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+
+      /* Hide scrollbar completely */
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
     }
 
     #MobileNavOverlay.active {
-      opacity: 1 !important;
-      pointer-events: auto !important;
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.25s ease,
+                  visibility 0s 0s;
     }
 
-    /* Invisible backdrop for click-outside-to-close */
-    .m-menu-backdrop {
-      display: none !important;
+    /* Hide webkit scrollbar */
+    #MobileNavOverlay::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
 
-    /* The actual content container */
-    .m-menu-content {
-      display: flex !important;
-      flex-direction: column !important;
-      width: 100% !important;
-      height: 100% !important;
+    /* Mobile Menu Backdrop - dims content behind overlay */
+    .mobile-menu-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 98; /* Below overlay (101) but above content */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
     }
 
-    /* Top row: avatar + close button */
-    .m-menu-toprow {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      margin-bottom: 48px !important;
+    .mobile-menu-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    .m-avatar {
-      width: 52px !important;
-      height: 52px !important;
-      border-radius: 14px !important;
-      object-fit: cover !important;
-      border: 1px solid rgba(255,255,255,0.1) !important;
+    /* Hide backdrop on desktop */
+    @media (min-width: 1025px) {
+      .mobile-menu-backdrop {
+        display: none;
+      }
     }
 
-    .m-close-btn {
-      background: rgba(255,255,255,0.08) !important;
-      border: 1px solid rgba(255,255,255,0.1) !important;
-      color: var(--text) !important;
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 12px !important;
-      cursor: pointer !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
-    /* Nav links */
+    /* Nav links inside panel */
     .m-nav-links {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 0 !important;
-      flex: 1 !important;
-      padding: 0 !important;
-      margin: 0 !important;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 24px 24px 0 24px;
+      margin: 0;
+      order: 1;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      background: transparent;
     }
 
     .m-link {
-      display: block !important;
-      padding: 18px 0 !important;
-      font-family: var(--font-display) !important;
-      font-size: 28px !important;
-      font-weight: 700 !important;
-      color: var(--text) !important;
-      text-decoration: none !important;
-      border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-      transition: color 0.2s !important;
-      background: transparent !important;
-      margin: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s ease, padding-left 0.2s ease;
+      background: transparent;
+      margin: 0;
+      letter-spacing: -0.3px;
+      position: relative;
     }
 
-    .m-link:first-child {
-      border-top: 1px solid rgba(255,255,255,0.06) !important;
+    .m-link::after {
+      content: '→';
+      font-size: 16px;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      color: var(--primary);
     }
 
+    .m-link:hover,
     .m-link:active {
-      color: var(--primary) !important;
+      color: var(--text);
+      padding-left: 6px;
     }
 
-    /* Resume download link inside nav */
-    .m-resume-link {
-      display: flex !important;
-      align-items: center !important;
-      gap: 12px !important;
-      padding: 18px 0 !important;
-      font-family: var(--font-display) !important;
-      font-size: 28px !important;
-      font-weight: 700 !important;
-      color: var(--text) !important;
-      text-decoration: none !important;
-      border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-      transition: color 0.2s !important;
-      background: transparent !important;
-      margin: 0 !important;
+    .m-link:hover::after {
+      opacity: 1;
+      transform: translateX(0);
     }
 
-    .m-resume-link:active {
-      color: var(--primary) !important;
+    /* Remove bottom border from last navigation link */
+    .m-link:last-child {
+      border-bottom: none;
     }
 
-    .m-resume-icon {
-      width: 24px !important;
-      height: 24px !important;
-      flex-shrink: 0 !important;
-      opacity: 0.5 !important;
+    /* Bottom CTA row in mobile overlay */
+    .m-menu-cta-row {
+      display: flex;
+      gap: 12px;
+      padding: 24px 24px 28px 24px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      order: 2;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+      background: transparent;
     }
 
-    /* Remove unused .m-menu-cta and .m-resume-btn */
-    .m-menu-cta { display: none !important; }
+    .m-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-family: var(--font-label);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+      z-index: 20;
+    }
+
+    .m-cta-secondary {
+      background: var(--cyan);
+      color: #001f24;
+      border: 1px solid var(--cyan-subtle);
+      box-shadow: 0 4px 20px var(--cyan-glow);
+    }
+
+    :root.light .m-cta-secondary {
+      color: #ffffff;
+    }
+
+    .m-cta-secondary:hover {
+      background: var(--cyan-dim);
+      box-shadow: 0 6px 28px var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    .m-cta-tertiary {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .m-cta-tertiary:hover {
+      border-color: var(--primary-subtle);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .m-cta-primary {
+      background: var(--primary);
+      color: #1a0500;
+      border: none;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .m-cta-primary:hover {
+      background: var(--primary-dim);
+      box-shadow: 0 6px 28px var(--primary-glow);
+      transform: translateY(-1px);
+    }
 
 
     /* ── Animated gradient border on hero card ── */
@@ -1924,16 +2254,142 @@
     .glow-border:hover::before {
       opacity: 0.5;
     }
+
+    /* ──────────────────────────────────────────────────────────────── */
+    /* ── ACCESSIBILITY & PERFORMANCE: CRITICAL IMPROVEMENTS ────────── */
+    /* ──────────────────────────────────────────────────────────────── */
+
+    /* ── 1. Reduced Motion Support (Accessibility Critical) ── */
+    /*
+     * Respects user's OS-level preference for reduced motion.
+     * Critical for users with vestibular disorders, motion sensitivity,
+     * or those who find animations distracting/nauseating.
+     */
+    @media (prefers-reduced-motion: reduce) {
+      /* Disable all animations and transitions */
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      /* Hide custom cursor (not accessible with reduced motion) */
+      #cursor {
+        display: none !important;
+      }
+
+      /* Restore normal cursor */
+      body {
+        cursor: auto !important;
+      }
+
+      /* Hide particle background (continuous motion) */
+      #bg-canvas {
+        display: none !important;
+      }
+
+      /* Disable pulsing animations */
+      .hero-badge-dot,
+      .badge-current-dot,
+      .wip-dot,
+      .skills-tag::before {
+        animation: none !important;
+      }
+
+      /* Reveal all content immediately (no scroll animations) */
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    /* ── 2. Focus States (Keyboard Navigation Accessibility) ── */
+    /*
+     * Visible focus indicators for keyboard navigation.
+     * Critical for users who navigate without a mouse.
+     */
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Enhanced focus for interactive elements */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    /* Focus for custom interactive elements */
+    .cat-header:focus-visible,
+    .accordion-header:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: -2px;
+    }
+
+    /* Ensure focus is visible in light mode too */
+    :root.light *:focus-visible {
+      outline-color: var(--primary);
+    }
+
+    /* ── 3. Touch-Friendly Sizing (Mobile Accessibility) ── */
+    /*
+     * Ensure interactive elements meet WCAG 2.1 minimum touch target size.
+     * Minimum: 44x44px for touch targets.
+     */
+    .theme-toggle {
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    @media (max-width: 1024px) {
+      .hamburger-btn {
+        min-width: 48px;
+        min-height: 48px;
+      }
+    }
+
+    /* ── 4. Skip to Content Link (Keyboard Navigation) ── */
+    /*
+     * Allows keyboard users to skip navigation and jump directly to content.
+     * Hidden by default, visible when focused.
+     */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      z-index: 9999;
+      padding: 1em 1.5em;
+      background: var(--primary);
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 0 0 8px 0;
+    }
+
+    .skip-link:focus {
+      left: 0;
+      top: 0;
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- Skip to main content (accessibility) -->
+  <a href="#Hero" class="skip-link">Skip to main content</a>
+
   <!-- Cursor -->
-  <div id="cursor"></div>
+  <div id="cursor" aria-hidden="true"></div>
 
   <!-- Animated dot-grid background -->
-  <canvas id="bg-canvas"></canvas>
+  <canvas id="bg-canvas" aria-hidden="true" role="presentation"></canvas>
 
   <!-- NAV -->
   <nav id="navbar">
@@ -1965,22 +2421,23 @@
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
       </button>
-      <a class="btn btn-outline" href="assets/resume.pdf" download="Polu_Nandeeswar_Resume.pdf">
-        <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <a class="btn btn-secondary" href="assets/resume.pdf" download="Polu_Nandeeswar_Resume.pdf" aria-label="Download Resume">
+        <svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
           <polyline points="7,10 12,15 17,10" />
           <line x1="12" y1="15" x2="12" y2="3" />
         </svg>
         <span class="btn-label">Resume</span>
-        <span class="btn-cv">CV</span>
       </a>
-      <a class="btn btn-primary" href="mailto:polunandeeswar2002@gmail.com?subject=Inquiry: Cloud/DevOps Engineering Role&body=Hi Nandeeswar Polu,">Hire Me<span class="btn-arrow"> →</span></a>
-      <button class="btn btn-menu" id="MenuToggle" aria-label="Toggle Menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
+      <a class="btn btn-primary" href="mailto:polunandeeswar2002@gmail.com?subject=Inquiry: Cloud/DevOps Engineering Role&body=Hi Nandeeswar Polu," aria-label="Hire Me">
+        <span class="btn-label">Hire Me</span>
+        <span class="btn-arrow"> →</span>
+      </a>
+      <!-- Animated Hamburger -->
+      <button class="hamburger-btn" id="HamburgerBtn" aria-label="Toggle Menu" aria-expanded="false">
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
       </button>
     </div>
   </nav>
@@ -2529,13 +2986,20 @@
           <div class="bento-img">
             <img
               src="assets/terraform cheatsheet photo.webp"
-              alt="Terraform" />
+              alt="Terraform"
+              loading="lazy" />
             <span class="bento-badge badge-orange">Technical Breakdown</span>
           </div>
           <div class="bento-body">
             <div class="bento-title">Terraform Basics: Modular AWS Infrastructure</div>
             <p class="bento-desc">A production-ready collection of modular HCL patterns designed for high-availability
               AWS environments, focusing on networking and ECS orchestration.</p>
+            <div class="bento-meta">
+              <span class="bento-meta-tag">Terraform</span>
+              <span class="bento-meta-tag">AWS</span>
+              <span class="bento-meta-tag">ECS</span>
+              <span class="bento-meta-tag">VPC</span>
+            </div>
             <a class="bento-link bento-link-orange stretched-link" href="https://github.com/EeswarSunny/Terraform-basics"
               target="_blank">
               Explore Repository
@@ -2549,13 +3013,19 @@
           <div class="bento-img">
             <img
               src="assets/iam meduim photo.webp"
-              alt="IAM" />
+              alt="IAM"
+              loading="lazy" />
             <span class="bento-badge badge-gold">Medium Article</span>
           </div>
           <div class="bento-body">
             <div class="bento-title">4 AWS IAM Truths for Cloud Security</div>
             <p class="bento-desc">An exploration of the Principle of Least Privilege and why standard IAM configurations
               often fail basic security audits in enterprise environments.</p>
+            <div class="bento-meta">
+              <span class="bento-meta-tag">AWS IAM</span>
+              <span class="bento-meta-tag">Security</span>
+              <span class="bento-meta-tag">Medium</span>
+            </div>
             <a class="bento-link bento-link-gold stretched-link" href="https://medium.com/aws-in-plain-english/4-aws-iam-truths-that-will-change-how-you-manage-cloud-security-️-7a0a393e2b59" target="_blank">
               Read Article
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -2568,13 +3038,19 @@
           <div class="bento-img">
             <img
               src="assets/dokcer meduim photo.webp"
-              alt="Docker" />
+              alt="Docker"
+              loading="lazy" />
             <span class="bento-badge badge-cyan">Medium Article</span>
           </div>
           <div class="bento-body">
             <div class="bento-title">Demystifying Docker: 5 Foundational Concepts</div>
             <p class="bento-desc">Everything you need to know about container orchestration, from layers and storage to
               networking and production best practices.</p>
+            <div class="bento-meta">
+              <span class="bento-meta-tag">Docker</span>
+              <span class="bento-meta-tag">Containers</span>
+              <span class="bento-meta-tag">Medium</span>
+            </div>
             <a class="bento-link bento-link-cyan stretched-link" href="https://medium.com/aws-in-plain-english/demystifying-docker-5-foundational-concepts-for-beginners-5e7e7cdf2aea" target="_blank">
               Read Article
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -2754,9 +3230,10 @@
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let W, H, pts = [];
-    const COUNT = 80;
+    const COUNT = window.innerWidth < 768 ? 40 : 80; // Reduce particles on mobile for better performance
     const REP = 110;
     let mouseX = -999, mouseY = -999;
+    let animationId;
 
     function initCanvas() {
       W = canvas.width = window.innerWidth;
@@ -2804,9 +3281,18 @@
         ctx.fillStyle = `rgba(255,143,111,${alpha})`;
         ctx.fill();
       }
-      requestAnimationFrame(drawParticles);
+      animationId = requestAnimationFrame(drawParticles);
     }
     drawParticles();
+
+    // Pause particles when tab is hidden (performance optimization)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (animationId) cancelAnimationFrame(animationId);
+      } else {
+        drawParticles();
+      }
+    });
 
     // ── Counter animation ─────────────────────────────────────
     function animateCounter(el) {
@@ -2847,65 +3333,100 @@
     }
   </script>
 
-  <!-- Mobile Menu Overlay -->
-  <div id="MobileNavOverlay">
-    <div class="m-menu-backdrop" id="MBackdrop"></div>
-    <div class="m-menu-content">
+  <!-- Mobile Menu Backdrop -->
+  <div class="mobile-menu-backdrop" id="MobileMenuBackdrop"></div>
 
-      <!-- Row 1: Avatar + Close button -->
-      <div class="m-menu-toprow">
-        <img src="assets/profile-square.png" alt="Nandeeswar Reddy Polu" class="m-avatar" />
-        <button class="m-close-btn" id="MCloseBtn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
+  <!-- Mobile Menu Dropdown (slides down from below navbar) -->
+  <div id="MobileNavOverlay" role="dialog" aria-label="Navigation menu">
 
-      <!-- Nav links in correct order -->
-      <nav class="m-nav-links">
-        <a href="#Skills" class="m-link">Skills Matrix</a>
-        <a href="#Experience" class="m-link">Experience</a>
-        <a href="assets/resume.pdf" download="Polu_Nandeeswar_Resume.pdf" class="m-resume-link">
-          <svg class="m-resume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7,10 12,15 17,10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Resume
-        </a>
-        <a href="#Blogs" class="m-link">Blog</a>
-        <a href="#Contact" class="m-link">Contact</a>
-      </nav>
+    <!-- Nav links -->
+    <nav class="m-nav-links" aria-label="Mobile navigation">
+      <a href="#Skills" class="m-link">Skills</a>
+      <a href="#Experience" class="m-link">Experience</a>
+      <a href="#Projects" class="m-link">Blog</a>
+      <a href="#Contact" class="m-link">Contact</a>
+    </nav>
 
+    <!-- CTA row -->
+    <div class="m-menu-cta-row">
+      <a href="assets/resume.pdf" download="Polu_Nandeeswar_Resume.pdf" class="m-cta-btn m-cta-secondary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7,10 12,15 17,10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Resume
+      </a>
+      <a href="mailto:polunandeeswar2002@gmail.com?subject=Inquiry: Cloud/DevOps Engineering Role&body=Hi Nandeeswar Polu," class="m-cta-btn m-cta-primary">
+        Hire Me &nbsp;→
+      </a>
     </div>
+
   </div>
 
   <script>
     (function() {
-      const toggle = document.getElementById('MenuToggle');
-      const overlay = document.getElementById('MobileNavOverlay');
-      const close = document.getElementById('MCloseBtn');
-      const backdrop = document.getElementById('MBackdrop');
-      const links = document.querySelectorAll('.m-link');
+      const hamburger = document.getElementById('HamburgerBtn');
+      const overlay   = document.getElementById('MobileNavOverlay');
+      const backdrop  = document.getElementById('MobileMenuBackdrop');
+      const navbar    = document.getElementById('navbar');
+      const navItems  = document.querySelectorAll('.m-link, .m-cta-btn');
 
-      function toggleNav() {
-        if (!overlay) return;
-        const isActive = overlay.classList.toggle('active');
-        document.body.style.overflow = isActive ? 'hidden' : '';
+      function openNav() {
+        overlay.classList.add('active');
+        if (backdrop) backdrop.classList.add('active');
+        hamburger.classList.add('open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        // Ensure navbar has background when menu is open
+        if (navbar && window.scrollY <= 40) {
+          navbar.classList.add('scrolled');
+          navbar.dataset.menuOpen = 'true';
+        }
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = 'hidden';
       }
 
-      if (toggle && overlay) {
-        toggle.addEventListener('click', toggleNav);
-        if (close) close.addEventListener('click', toggleNav);
-        if (backdrop) backdrop.addEventListener('click', toggleNav);
-        
-        links.forEach(l => {
-          l.addEventListener('click', () => {
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-          });
+      function closeNav() {
+        overlay.classList.remove('active');
+        if (backdrop) backdrop.classList.remove('active');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        // Remove navbar background if not scrolled
+        if (navbar && navbar.dataset.menuOpen === 'true' && window.scrollY <= 40) {
+          navbar.classList.remove('scrolled');
+          delete navbar.dataset.menuOpen;
+        }
+        // Restore body scroll
+        document.body.style.overflow = '';
+      }
+
+      function toggleNav() {
+        overlay.classList.contains('active') ? closeNav() : openNav();
+      }
+
+      if (hamburger && overlay) {
+        hamburger.addEventListener('click', toggleNav);
+
+        // Close on link/cta click
+        navItems.forEach(item => item.addEventListener('click', closeNav));
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && overlay.classList.contains('active')) closeNav();
+        });
+
+        // Close when clicking outside (on backdrop)
+        if (backdrop) {
+          backdrop.addEventListener('click', closeNav);
+        }
+
+        // Close when clicking outside overlay
+        document.addEventListener('click', (e) => {
+          if (overlay.classList.contains('active') &&
+              !overlay.contains(e.target) &&
+              !hamburger.contains(e.target)) {
+            closeNav();
+          }
         });
       }
     })();
